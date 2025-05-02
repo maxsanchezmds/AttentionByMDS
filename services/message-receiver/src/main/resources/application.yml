@@ -5,14 +5,14 @@ spring:
     active: dev
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update  # Cambiado a update para desarrollo inicial
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/whatsapp_db
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: postgres
+    password: postgres
 
 server:
   port: 8081
@@ -31,4 +31,4 @@ management:
 aws:
   region: us-east-1
   sqs:
-    queue-name: whatsapp-message-queue
+    queue-url: https://sqs.us-east-1.amazonaws.com/123456789012/whatsapp-message-queue

@@ -35,10 +35,10 @@ public class Message {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "conversation_id", nullable = false)
-    @JsonIgnore // Para evitar ciclos en la serialización JSON
+    @JsonIgnore
     private Conversation conversation;
     
-    // Constructor conveniente
+    // Constructor sin campos redundantes
     public Message(String whatsappMessageId, String messageContent, LocalDateTime timestamp, boolean fromCustomer) {
         this.whatsappMessageId = whatsappMessageId;
         this.messageContent = messageContent;

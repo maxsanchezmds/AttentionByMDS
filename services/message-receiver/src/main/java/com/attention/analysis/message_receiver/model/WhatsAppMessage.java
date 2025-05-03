@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
 @Table(name = "messages")
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)  // Añade esta línea
 public class WhatsAppMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,13 +31,14 @@ public class WhatsAppMessage {
     private String messageContent;
     
     @Column(name = "sent_at")
-    private LocalDateTime timestamp;
+    private String timestamp;  // Ya cambiado a String como sugerí anteriormente
     
     @Column(name = "agent_id")
     private String agentId;
     
     @Column(name = "is_from_customer")
-    private boolean isFromCustomer;
+    @JsonProperty("isFromCustomer")  // Añade esta línea
+    private boolean fromCustomer;    // Cambia el nombre del campo
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

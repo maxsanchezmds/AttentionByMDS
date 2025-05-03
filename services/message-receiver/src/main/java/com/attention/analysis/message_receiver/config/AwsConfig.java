@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sqs.SqsClient;
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
+import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
@@ -18,10 +20,26 @@ public class AwsConfig {
 
     @Bean
     public SqsClient sqsClient() {
-        return SqsClient.builder()
-                .region(Region.of(awsRegion))
-                .credentialsProvider(DefaultCredentialsProvider.create())
-                .build();
+        // En desarrollo, usar una implementación "dummy" que no hace nada
+        return new SqsClient() {
+            @Override
+            public String serviceName() {
+                return "SQS";
+            }
+            
+            @Override
+            public void close() {
+                // No-op
+            }
+            
+            // Implementa los métodos necesarios con stubs
+            @Override
+            public SendMessageResponse sendMessage(SendMessageRequest request) {
+                return SendMessageResponse.builder().build();
+            }
+            
+            // Implementar otros métodos según sea necesario
+        };
     }
 
     @Bean

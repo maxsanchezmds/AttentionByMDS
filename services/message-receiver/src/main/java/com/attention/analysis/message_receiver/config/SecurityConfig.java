@@ -13,7 +13,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // Para desarrollo, desactivamos CSRF y permitimos todas las solicitudes
-        // En producción, deberías configurar una autenticación adecuada
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth

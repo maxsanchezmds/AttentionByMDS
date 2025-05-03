@@ -1,17 +1,17 @@
 package com.attention.analysis.message_receiver.service;
 
-import com.attention.analysis.message_receiver.model.WhatsAppMessage;
+import com.attention.analysis.message_receiver.dto.WhatsAppMessageDTO;
+import com.attention.analysis.message_receiver.model.Conversation;
+import com.attention.analysis.message_receiver.model.Message;
 import com.attention.analysis.message_receiver.repository.MessageRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-
-import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,54 +22,57 @@ public class MessageProcessorService {
     private MessageRepository messageRepository;
     
     @Autowired
-    private SqsClient sqsClient;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
-    
-    @Value("${aws.sqs.queue-url}")
-    private String queueUrl;
+    private ConversationService conversationService;
 
-    public WhatsAppMessage processMessage(WhatsAppMessage message) {
-        logger.info("Processing message: {}", message.getWhatsappMessageId());
+    /**
+     * Procesa un mensaje entrante de WhatsApp
+     */
+    @Transactional
+    public Message processMessage(WhatsAppMessageDTO messageDTO) {
+        logger.info("Procesando mensaje de WhatsApp: {}", messageDTO.getWhatsappMessageId());
         
-        // Si el mensaje no tiene prioridad asignada, establecerla como MODERADO por defecto
-        if (message.getPriority() == null) {
-            message.setPriority(WhatsAppMessage.MessagePriority.MODERADO);
-        }
+        // 1. Buscar o crear la conversación para este número de teléfono
+        Conversation conversation = conversationService.findOrCreateConversation(
+            messageDTO.getPhoneNumber(), 
+            messageDTO.getCustomerName()
+        );
         
-        // Si el mensaje no tiene estado asignado, establecerlo como RECEIVED por defecto
-        if (message.getStatus() == null) {
-            message.setStatus(WhatsAppMessage.MessageStatus.RECEIVED);
-        }
-        
-        // 1. Guardar mensaje en la base de datos
-        WhatsAppMessage savedMessage = messageRepository.save(message);
-        
+        // 2. Convertir timestamp de String a LocalDateTime
+        LocalDateTime timestamp;
         try {
-            // 2. Enviar mensaje a SQS para procesamiento asíncrono
-            String messageBody = objectMapper.writeValueAsString(savedMessage);
-            
-            SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
-                .queueUrl(queueUrl)
-                .messageBody(messageBody)
-                .build();
-            
-            sqsClient.sendMessage(sendMsgRequest);
-            
-            logger.info("Message processed and sent to queue: {}", message.getWhatsappMessageId());
+            timestamp = LocalDateTime.parse(messageDTO.getTimestamp(), DateTimeFormatter.ISO_DATE_TIME);
         } catch (Exception e) {
-            logger.error("Error sending message to SQS: {}", e.getMessage(), e);
+            logger.warn("Error al parsear fecha: {}, usando fecha actual", e.getMessage());
+            timestamp = LocalDateTime.now();
         }
         
-        return savedMessage;
+        // 3. Crear una nueva entidad Message
+        Message message = new Message(
+            messageDTO.getWhatsappMessageId(),
+            messageDTO.getMessageContent(),
+            timestamp,
+            messageDTO.isFromCustomer()
+        );
+        
+        // 4. Añadir el mensaje a la conversación
+        conversation = conversationService.addMessageToConversation(conversation, message);
+        
+        logger.info("Mensaje procesado correctamente: {}", messageDTO.getWhatsappMessageId());
+        
+        return message;
     }
     
-    public Map<String, Long> getMessageCountsByPriority() {
-        return messageRepository.countByPriority();
-    }
-    
-    public Optional<WhatsAppMessage> findById(String id) {
+    /**
+     * Obtiene un mensaje por su ID
+     */
+    public Optional<Message> getMessageById(String id) {
         return messageRepository.findById(id);
+    }
+    
+    /**
+     * Obtiene todos los mensajes de una conversación
+     */
+    public List<Message> getMessagesByConversation(String conversationId) {
+        return messageRepository.findByConversationId(conversationId);
     }
 }

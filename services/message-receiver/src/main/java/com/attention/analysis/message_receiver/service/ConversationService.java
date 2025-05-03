@@ -61,4 +61,25 @@ public class ConversationService {
         conversation.addMessage(message);
         return conversationRepository.save(conversation);
     }
+    
+    /**
+     * Marca una conversación como actualizada
+     */
+    @Transactional
+    public Conversation marcarComoActualizada(String id) {
+        Optional<Conversation> conversationOpt = conversationRepository.findById(id);
+        if (conversationOpt.isPresent()) {
+            Conversation conversation = conversationOpt.get();
+            conversation.marcarComoActualizada();
+            return conversationRepository.save(conversation);
+        }
+        throw new RuntimeException("No se encontró la conversación con ID: " + id);
+    }
+
+    /**
+     * Obtiene todas las conversaciones no actualizadas
+     */
+    public List<Conversation> getConversacionesNoActualizadas() {
+        return conversationRepository.findByActualizadoFalse();
+    }
 }

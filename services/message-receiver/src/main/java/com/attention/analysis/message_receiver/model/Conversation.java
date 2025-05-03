@@ -45,6 +45,9 @@ public class Conversation {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
     
+    @Column(name = "actualizado")
+    private Boolean actualizado = false; // Por defecto es 'false'
+    
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages = new ArrayList<>();
     
@@ -63,5 +66,21 @@ public class Conversation {
         messages.add(message);
         message.setConversation(this);
         this.updatedAt = LocalDateTime.now();
+        this.actualizado = false; // Marcar como no actualizado cuando se añade un mensaje
+    }
+    
+    // Método para marcar la conversación como actualizada
+    public void marcarComoActualizada() {
+        this.actualizado = true;
+    }
+
+    // Método para marcar la conversación como no actualizada
+    public void marcarComoNoActualizada() {
+        this.actualizado = false;
+    }
+
+    // Método para verificar si la conversación está actualizada
+    public boolean estaActualizada() {
+        return this.actualizado;
     }
 }

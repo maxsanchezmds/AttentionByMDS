@@ -65,4 +65,25 @@ public class MessageController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
+    /**
+     * Obtener todas las conversaciones no actualizadas
+     */
+    @GetMapping("/conversations/no-actualizadas")
+    public ResponseEntity<List<Conversation>> getConversacionesNoActualizadas() {
+        return ResponseEntity.ok(conversationService.getConversacionesNoActualizadas());
+    }
+
+    /**
+     * Marcar una conversación como actualizada
+     */
+    @PutMapping("/conversations/{id}/actualizar")
+    public ResponseEntity<Conversation> marcarConversacionComoActualizada(@PathVariable String id) {
+        try {
+            Conversation conversation = conversationService.marcarComoActualizada(id);
+            return ResponseEntity.ok(conversation);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

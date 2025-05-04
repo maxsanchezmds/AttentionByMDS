@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.attention.analysis</groupId>
-	<artifactId>sentiment-analysis</artifactId>
+	<artifactId>sentiment-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sentiment-analysis</name>
+	<name>sentiment-service</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

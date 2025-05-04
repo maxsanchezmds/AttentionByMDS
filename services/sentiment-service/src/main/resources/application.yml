@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: sentiment-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${SENTIMENT_DB_NAME:sentiment_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+server:
+  port: ${SENTIMENT_SERVICE_PORT:8082}
+  servlet:
+    context-path: /api/sentiment
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY:your-default-key-here}
+  model: ${OPENAI_MODEL:gpt-3.5-turbo}

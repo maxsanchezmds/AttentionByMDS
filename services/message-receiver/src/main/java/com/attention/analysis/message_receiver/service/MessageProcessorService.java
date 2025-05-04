@@ -5,6 +5,7 @@ import com.attention.analysis.message_receiver.dto.WhatsAppWebhookDTO;
 import com.attention.analysis.message_receiver.dto.WhatsAppMessageEntryDTO;
 import com.attention.analysis.message_receiver.dto.WhatsAppContactDTO;
 import com.attention.analysis.message_receiver.model.Conversation;
+import com.attention.analysis.message_receiver.model.Empresa;
 import com.attention.analysis.message_receiver.model.Message;
 import com.attention.analysis.message_receiver.repository.MessageRepository;
 import org.slf4j.Logger;
@@ -28,6 +29,12 @@ public class MessageProcessorService {
     
     @Autowired
     private ConversationService conversationService;
+
+    @Autowired
+    private EmpresaService empresaService;
+
+    @Autowired
+    private SentimentAnalysisService sentimentAnalysisService;
 
     /**
      * Procesa un webhook de WhatsApp (nuevo formato)
@@ -76,8 +83,11 @@ public class MessageProcessorService {
         // Todos los mensajes recibidos de la API de WhatsApp son del cliente
         boolean isFromCustomer = true;
         
-        // Buscar o crear la conversación
-        Conversation conversation = conversationService.findOrCreateConversation(phoneNumber, customerName);
+        // Obtener o crear la empresa (aquí usamos un nombre predeterminado, podría venir de los datos)
+        Empresa empresa = empresaService.findOrCreateEmpresa("DefaultCompany");
+        
+        // Buscar o crear la conversación, ahora incluyendo la empresa
+        Conversation conversation = conversationService.findOrCreateConversation(phoneNumber, customerName, empresa);
         
         // Crear una nueva entidad Message
         Message message = new Message(
@@ -89,6 +99,9 @@ public class MessageProcessorService {
         
         // Añadir el mensaje a la conversación
         conversation = conversationService.addMessageToConversation(conversation, message);
+        
+        // Enviar el mensaje para análisis de sentimiento
+        sentimentAnalysisService.enviarMensajeParaAnalisis(message);
         
         logger.info("Mensaje procesado correctamente: {}", whatsappMessageId);
         
@@ -102,10 +115,14 @@ public class MessageProcessorService {
     public Message processMessage(WhatsAppMessageDTO messageDTO) {
         logger.info("Procesando mensaje de WhatsApp: {}", messageDTO.getWhatsappMessageId());
         
-        // 1. Buscar o crear la conversación para este número de teléfono
+        // Obtener o crear la empresa (usando un nombre predeterminado)
+        Empresa empresa = empresaService.findOrCreateEmpresa("DefaultCompany");
+        
+        // 1. Buscar o crear la conversación para este número de teléfono, ahora incluyendo la empresa
         Conversation conversation = conversationService.findOrCreateConversation(
             messageDTO.getPhoneNumber(), 
-            messageDTO.getCustomerName()
+            messageDTO.getCustomerName(),
+            empresa
         );
         
         // 2. Convertir timestamp de String a LocalDateTime
@@ -127,6 +144,9 @@ public class MessageProcessorService {
         
         // 4. Añadir el mensaje a la conversación
         conversation = conversationService.addMessageToConversation(conversation, message);
+        
+        // 5. Enviar el mensaje para análisis de sentimiento
+        sentimentAnalysisService.enviarMensajeParaAnalisis(message);
         
         logger.info("Mensaje procesado correctamente: {}", messageDTO.getWhatsappMessageId());
         

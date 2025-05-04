@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Data
 @Entity
 @Table(name = "conversations")
@@ -51,6 +53,11 @@ public class Conversation {
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> messages = new ArrayList<>();
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_empresa", nullable = false)
+    @JsonIgnore
+    private Empresa empresa;
+
     // Enumeración para la prioridad
     public enum Priority {
         URGENTE, MODERADO, LEVE

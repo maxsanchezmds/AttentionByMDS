@@ -1,6 +1,7 @@
 package com.attention.analysis.message_receiver.service;
 
 import com.attention.analysis.message_receiver.model.Conversation;
+import com.attention.analysis.message_receiver.model.Empresa;
 import com.attention.analysis.message_receiver.model.Message;
 import com.attention.analysis.message_receiver.repository.ConversationRepository;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class ConversationService {
      * Busca una conversación por número de teléfono o crea una nueva si no existe
      */
     @Transactional
-    public Conversation findOrCreateConversation(String phoneNumber, String customerName) {
+    public Conversation findOrCreateConversation(String phoneNumber, String customerName, Empresa empresa) {
         Optional<Conversation> existingConversation = conversationRepository.findByPhoneNumber(phoneNumber);
         
         if (existingConversation.isPresent()) {
@@ -34,6 +35,7 @@ public class ConversationService {
             Conversation newConversation = new Conversation();
             newConversation.setPhoneNumber(phoneNumber);
             newConversation.setCustomerName(customerName);
+            newConversation.setEmpresa(empresa); // Asignar la empresa
             // Los valores por defecto ya están establecidos en la clase Conversation
             return conversationRepository.save(newConversation);
         }

@@ -1,6 +1,7 @@
 package com.attention.analysis.message_receiver.controller;
 
 import com.attention.analysis.message_receiver.dto.WhatsAppMessageDTO;
+import com.attention.analysis.message_receiver.dto.WhatsAppWebhookDTO;
 import com.attention.analysis.message_receiver.model.Conversation;
 import com.attention.analysis.message_receiver.model.Message;
 import com.attention.analysis.message_receiver.service.ConversationService;
@@ -22,9 +23,19 @@ public class MessageController {
     private ConversationService conversationService;
 
     /**
-     * Endpoint para recibir mensajes de WhatsApp
+     * Endpoint para recibir webhooks de WhatsApp
      */
     @PostMapping("/webhook")
+    public ResponseEntity<Message> receiveWhatsAppWebhook(@RequestBody WhatsAppWebhookDTO webhookDTO) {
+        Message processedMessage = messageProcessorService.processWebhook(webhookDTO);
+        return new ResponseEntity<>(processedMessage, HttpStatus.CREATED);
+    }
+    
+    /**
+     * Endpoint para recibir mensajes de WhatsApp (formato antiguo)
+     * Mantenido por compatibilidad
+     */
+    @PostMapping("/webhook/legacy")
     public ResponseEntity<Message> receiveWhatsAppMessage(@RequestBody WhatsAppMessageDTO messageDTO) {
         Message processedMessage = messageProcessorService.processMessage(messageDTO);
         return new ResponseEntity<>(processedMessage, HttpStatus.CREATED);

@@ -17,19 +17,43 @@ public class EmpresaService {
     @Autowired
     private EmpresaRepository empresaRepository;
     
+    /**
+     * Busca o crea una empresa con un nombre predeterminado
+     */
     @Transactional
     public Empresa findOrCreateEmpresa(String nombreEmpresa) {
         logger.info("Buscando o creando empresa: {}", nombreEmpresa);
-        return empresaRepository.findByNombreEmpresa(nombreEmpresa)
-                .orElseGet(() -> {
-                    Empresa nuevaEmpresa = new Empresa();
-                    nuevaEmpresa.setNombreEmpresa(nombreEmpresa);
-                    logger.info("Creando nueva empresa: {}", nombreEmpresa);
-                    return empresaRepository.save(nuevaEmpresa);
-                });
+        
+        // Buscar la empresa por nombre
+        Optional<Empresa> existingEmpresa = empresaRepository.findByNombreEmpresa(nombreEmpresa);
+        
+        if (existingEmpresa.isPresent()) {
+            logger.info("Empresa encontrada: {}", nombreEmpresa);
+            return existingEmpresa.get();
+        } else {
+            logger.info("Creando nueva empresa: {}", nombreEmpresa);
+            Empresa nuevaEmpresa = new Empresa();
+            nuevaEmpresa.setNombreEmpresa(nombreEmpresa);
+            
+            // Generar un identificador aleatorio para la empresa
+            nuevaEmpresa.setIdentificadorEmpresa(java.util.UUID.randomUUID().toString());
+            
+            return empresaRepository.save(nuevaEmpresa);
+        }
     }
     
-    public Optional<Empresa> findById(Long idEmpresa) {
-        return empresaRepository.findById(idEmpresa);
+    /**
+     * Busca una empresa por su identificador único
+     */
+    public Empresa findByIdentificadorEmpresa(String identificadorEmpresa) {
+        return empresaRepository.findByIdentificadorEmpresa(identificadorEmpresa)
+                .orElseThrow(() -> new RuntimeException("Empresa no encontrada con el identificador: " + identificadorEmpresa));
+    }
+    
+    /**
+     * Busca una empresa por su ID
+     */
+    public Optional<Empresa> findById(Long id) {
+        return empresaRepository.findById(id);
     }
 }

@@ -10,5 +10,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     
     Optional<Empresa> findByNombreEmpresa(String nombreEmpresa);
     
+    Optional<Empresa> findByIdentificadorEmpresa(String identificadorEmpresa);
+    
     boolean existsByNombreEmpresa(String nombreEmpresa);
 }

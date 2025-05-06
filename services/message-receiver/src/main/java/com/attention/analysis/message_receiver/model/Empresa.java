@@ -21,8 +21,14 @@ public class Empresa {
     @Column(name = "nombre_empresa", nullable = false)
     private String nombreEmpresa;
     
-    // Otros campos relevantes para la empresa
+    @Column(name = "identificador_empresa", nullable = false, unique = true)
+    private String identificadorEmpresa;
     
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Conversation> conversations = new ArrayList<>();
+    
+    // Método para generar un identificador si no tiene uno
+    public void setIdentificadorEmpresa(String identificadorEmpresa) {
+        this.identificadorEmpresa = identificadorEmpresa;
+    }
 }

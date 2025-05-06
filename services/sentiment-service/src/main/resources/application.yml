@@ -22,3 +22,8 @@ openai:
   api:
     key: ${OPENAI_API_KEY:your-default-key-here}
   model: ${OPENAI_MODEL:gpt-3.5-turbo}
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970

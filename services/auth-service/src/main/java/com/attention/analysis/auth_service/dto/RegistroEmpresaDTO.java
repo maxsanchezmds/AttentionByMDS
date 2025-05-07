@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/dto/RegistroEmpresaDTO.java
 package com.attention.analysis.auth_service.dto;
 
 import jakarta.validation.constraints.Email;
@@ -20,6 +19,17 @@ public class RegistroEmpresaDTO {
     
     @NotBlank(message = "El NIT de la empresa es obligatorio")
     private String nitEmpresa;
+    
+    private String telefonoEmpresa;
+    
+    @Email(message = "Debe proporcionar un correo electrónico válido para la empresa")
+    private String correoEmpresa;
+    
+    private String direccionEmpresa;
+    
+    private String paisEmpresa;
+    
+    private String telefonoWhatsapp;
     
     @NotBlank(message = "El nombre completo es obligatorio")
     private String nombreCompleto;

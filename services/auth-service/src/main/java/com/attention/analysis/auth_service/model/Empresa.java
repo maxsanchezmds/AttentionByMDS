@@ -29,9 +29,23 @@ public class Empresa {
     @Column(name = "identificador_empresa", nullable = false, unique = true)
     private String identificadorEmpresa;
     
-    // Campo para NIT que no se mapeará a la base de datos
-    @Transient // Esta anotación indica que el campo no se persiste en la BD
-    private String nit;
+    @Column(name = "telefono_empresa")
+    private String telefonoEmpresa;
+    
+    @Column(name = "correo_empresa")
+    private String correoEmpresa;
+    
+    @Column(name = "nit_empresa", unique = true)
+    private String nitEmpresa;
+    
+    @Column(name = "direccion_empresa")
+    private String direccionEmpresa;
+    
+    @Column(name = "pais_empresa")
+    private String paisEmpresa;
+    
+    @Column(name = "telefono_whatsapp")
+    private String telefonoWhatsapp;
     
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Usuario> usuarios = new ArrayList<>();

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     @GetMapping("/perfil")
@@ -32,6 +32,12 @@ public class UsuarioController {
             empresa.put("id", usuario.getEmpresa().getId());
             empresa.put("nombreLegal", usuario.getEmpresa().getNombreLegal());
             empresa.put("identificadorEmpresa", usuario.getEmpresa().getIdentificadorEmpresa());
+            empresa.put("telefonoEmpresa", usuario.getEmpresa().getTelefonoEmpresa());
+            empresa.put("correoEmpresa", usuario.getEmpresa().getCorreoEmpresa());
+            empresa.put("nitEmpresa", usuario.getEmpresa().getNitEmpresa());
+            empresa.put("direccionEmpresa", usuario.getEmpresa().getDireccionEmpresa());
+            empresa.put("paisEmpresa", usuario.getEmpresa().getPaisEmpresa());
+            empresa.put("telefonoWhatsapp", usuario.getEmpresa().getTelefonoWhatsapp());
             perfil.put("empresa", empresa);
         }
         

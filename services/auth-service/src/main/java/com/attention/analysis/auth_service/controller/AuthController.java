@@ -12,20 +12,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/registro") // Cambio importante: quitamos /api/auth porque ya está en context-path
+
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/empresa")
+    @PostMapping("/registro/empresa")
     public ResponseEntity<AuthResponseDTO> registrarEmpresa(
             @RequestBody @Valid RegistroEmpresaDTO request
     ) {
         return ResponseEntity.ok(authService.registrarEmpresa(request));
     }
 
-    @PostMapping("/ejecutivo")
+    @PostMapping("/registro/ejecutivo")
     public ResponseEntity<AuthResponseDTO> registrarEjecutivo(
             @RequestBody @Valid RegistroEjecutivoDTO request
     ) {

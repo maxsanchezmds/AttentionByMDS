@@ -10,11 +10,6 @@ import java.util.Optional;
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     Optional<Empresa> findByIdentificadorEmpresa(String identificadorEmpresa);
     
-    // Eliminar el método problemático
-    // boolean existsByNit(String nit);
-    
-    // Método de conveniencia que siempre devuelve falso
-    default boolean existsByNit(String nit) {
-        return false;
-    }
+    // Añadimos método para verificar NIT
+    boolean existsByNitEmpresa(String nitEmpresa);
 }

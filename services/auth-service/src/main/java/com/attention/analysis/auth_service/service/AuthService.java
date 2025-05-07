@@ -38,16 +38,20 @@ public class AuthService {
             throw new RuntimeException("El documento de identidad ya está registrado");
         }
         
-        // Ya no verificamos el NIT porque no se almacena en la base de datos
-        // if (empresaRepository.existsByNit(request.getNitEmpresa())) {
-        //     throw new RuntimeException("El NIT de la empresa ya está registrado");
-        // }
+        // Verificar si el NIT ya está registrado
+        if (empresaRepository.existsByNitEmpresa(request.getNitEmpresa())) {
+            throw new RuntimeException("El NIT de la empresa ya está registrado");
+        }
         
-        // Crear la empresa
+        // Crear la empresa con todos los nuevos campos
         Empresa empresa = Empresa.builder()
                 .nombreLegal(request.getNombreLegalEmpresa())
-                // No guardamos el NIT en la base de datos
-                // .nit(request.getNitEmpresa())
+                .nitEmpresa(request.getNitEmpresa())
+                .telefonoEmpresa(request.getTelefonoEmpresa())
+                .correoEmpresa(request.getCorreoEmpresa())
+                .direccionEmpresa(request.getDireccionEmpresa())
+                .paisEmpresa(request.getPaisEmpresa())
+                .telefonoWhatsapp(request.getTelefonoWhatsapp())
                 .build();
         
         // Generar el identificador único automáticamente

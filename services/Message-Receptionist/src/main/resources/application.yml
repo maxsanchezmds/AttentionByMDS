@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: message-receptionist
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+server:
+  port: ${MESSAGE_RECEIVER_PORT}
+  servlet:
+    context-path: /api/messages
+
+# Servicios externos
+service:
+  # Servicio de empresas (AUTH)
+  empresas:
+    # Importante: el host del servicio auth es diferente de la base de datos
+    url: http://localhost:${AUTH_SERVICE_PORT}/api/auth/integracion/empresas/whatsapp
+  # Servicio de análisis de sentimientos
+  sentiment:
+    url: http://localhost:${SENTIMENT_SERVICE_PORT}/api/sentiment
+
+# Configuración de seguridad
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}

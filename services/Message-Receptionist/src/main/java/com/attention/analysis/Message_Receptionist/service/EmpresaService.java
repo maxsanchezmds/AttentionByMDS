@@ -61,59 +61,33 @@ public class EmpresaService {
         }
     }
 
-    public Optional<Empresa> validarNumeroEmpresa(String numeroTelefono) {
-        logger.info("Validando número de teléfono: {}", numeroTelefono);
+    public Optional<Empresa> validarNumeroEmpresa(String displayPhoneNumber) {
+        logger.info("Validando número de teléfono de empresa: {}", displayPhoneNumber);
         
-        // Fallback para pruebas y desarrollo
-        if (enModoDesarrolloOPruebas()) {
-            logger.info("Modo desarrollo/pruebas activado: creando empresa de prueba para número {}", numeroTelefono);
-            Empresa empresaPrueba = new Empresa();
-            empresaPrueba.setId(1L);
-            empresaPrueba.setCorreoEmpresa("empresa.prueba@example.com");
-            empresaPrueba.setTelefonoWhatsapp(numeroTelefono);
-            return Optional.of(empresaPrueba);
-        }
-        
-        // Flujo normal con servicio externo
+        // Obtener lista de empresas del servicio de autenticación
         List<Empresa> empresas = obtenerEmpresas();
         
         if (empresas.isEmpty()) {
-            logger.warn("No se pudo obtener la lista de empresas. Usando fallback local.");
-            return obtenerEmpresasFallback(numeroTelefono);
+            logger.warn("No se pudo obtener la lista de empresas.");
+            return Optional.empty();
         }
         
-        for (Empresa empresa : empresas) {
-            String telefonoEmpresa = limpiarNumeroTelefono(empresa.getTelefonoWhatsapp());
-            String telefonoCliente = limpiarNumeroTelefono(numeroTelefono);
-            
-            logger.debug("Comparando: Empresa [{}] vs Teléfono [{}]", telefonoEmpresa, telefonoCliente);
-            
-            if (validarCoincidenciaNumeros(telefonoEmpresa, telefonoCliente)) {
-                logger.info("Coincidencia encontrada con empresa ID: {}", empresa.getId());
-                return Optional.of(empresa);
-            }
-        }
+        // Limpiar el número que viene en el mensaje
+        String numeroLimpio = limpiarNumeroTelefono(displayPhoneNumber);
         
-        logger.warn("No se encontró coincidencia para el número: {}", numeroTelefono);
-        return Optional.empty();
-    }
-    
-    private Optional<Empresa> obtenerEmpresasFallback(String numeroTelefono) {
-        // Implementación de fallback en caso que el servicio externo falle
-        logger.info("Usando fallback para validar número: {}", numeroTelefono);
-        
-        // Números de ejemplo predefinidos para pruebas
-        if ("987654321".equals(limpiarNumeroTelefono(numeroTelefono)) || 
-            "56912345678".equals(limpiarNumeroTelefono(numeroTelefono))) {
-            
-            Empresa empresa = new Empresa();
-            empresa.setId(1L);
-            empresa.setCorreoEmpresa("fallback@example.com");
-            empresa.setTelefonoWhatsapp(numeroTelefono);
-            return Optional.of(empresa);
-        }
-        
-        return Optional.empty();
+        // Buscar coincidencia con alguna empresa
+        return empresas.stream()
+            .filter(empresa -> {
+                String telefonoEmpresa = limpiarNumeroTelefono(empresa.getTelefonoWhatsapp());
+                boolean coincide = validarCoincidenciaNumeros(telefonoEmpresa, numeroLimpio);
+                
+                if (coincide) {
+                    logger.info("Coincidencia encontrada con empresa ID: {}", empresa.getId());
+                }
+                
+                return coincide;
+            })
+            .findFirst();
     }
     
     private String limpiarNumeroTelefono(String numero) {
@@ -136,12 +110,5 @@ public class EmpresaService {
         }
         
         return false;
-    }
-    
-    // Método para determinar si estamos en modo desarrollo o pruebas
-    private boolean enModoDesarrolloOPruebas() {
-        // En un entorno real, esto podría leer una propiedad de configuración
-        // Para este ejemplo, asumimos que estamos en desarrollo para facilitar pruebas
-        return true; // Cambiar a false en producción
     }
 }

@@ -90,24 +90,6 @@ public class EmpresaService {
             .findFirst();
     }
     
-    private Optional<Empresa> obtenerEmpresasFallback(String numeroTelefono) {
-        // Implementación de fallback en caso que el servicio externo falle
-        logger.info("Usando fallback para validar número: {}", numeroTelefono);
-        
-        // Números de ejemplo predefinidos para pruebas
-        if ("987654321".equals(limpiarNumeroTelefono(numeroTelefono)) || 
-            "56912345678".equals(limpiarNumeroTelefono(numeroTelefono))) {
-            
-            Empresa empresa = new Empresa();
-            empresa.setId(1L);
-            empresa.setCorreoEmpresa("fallback@example.com");
-            empresa.setTelefonoWhatsapp(numeroTelefono);
-            return Optional.of(empresa);
-        }
-        
-        return Optional.empty();
-    }
-    
     private String limpiarNumeroTelefono(String numero) {
         // Eliminar todos los caracteres no numéricos
         return numero != null ? numero.replaceAll("[^0-9]", "") : "";
@@ -128,10 +110,5 @@ public class EmpresaService {
         }
         
         return false;
-    }
-    
-    // Método para determinar si estamos en modo desarrollo o pruebas
-    private boolean enModoDesarrolloOPruebas() {
-        return false; // Cambiar a false para deshabilitar el modo desarrollo
     }
 }

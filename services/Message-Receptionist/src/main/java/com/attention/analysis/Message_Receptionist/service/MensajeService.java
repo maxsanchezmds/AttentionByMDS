@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class MensajeService {
@@ -116,5 +117,9 @@ public class MensajeService {
             
             return conversacionRepository.save(nuevaConversacion);
         }
+    }
+
+    public List<Mensaje> obtenerMensajesPorConversacion(Long idConversacion) {
+        return mensajeRepository.findByConversacionIdOrderByFechaAsc(idConversacion);
     }
 }

@@ -64,22 +64,12 @@ public class EmpresaService {
     public Optional<Empresa> validarNumeroEmpresa(String numeroTelefono) {
         logger.info("Validando número de teléfono: {}", numeroTelefono);
         
-        // Fallback para pruebas y desarrollo
-        if (enModoDesarrolloOPruebas()) {
-            logger.info("Modo desarrollo/pruebas activado: creando empresa de prueba para número {}", numeroTelefono);
-            Empresa empresaPrueba = new Empresa();
-            empresaPrueba.setId(1L);
-            empresaPrueba.setCorreoEmpresa("empresa.prueba@example.com");
-            empresaPrueba.setTelefonoWhatsapp(numeroTelefono);
-            return Optional.of(empresaPrueba);
-        }
-        
         // Flujo normal con servicio externo
         List<Empresa> empresas = obtenerEmpresas();
         
         if (empresas.isEmpty()) {
-            logger.warn("No se pudo obtener la lista de empresas. Usando fallback local.");
-            return obtenerEmpresasFallback(numeroTelefono);
+            logger.warn("No se pudo obtener la lista de empresas.");
+            return Optional.empty();
         }
         
         for (Empresa empresa : empresas) {
@@ -140,8 +130,6 @@ public class EmpresaService {
     
     // Método para determinar si estamos en modo desarrollo o pruebas
     private boolean enModoDesarrolloOPruebas() {
-        // En un entorno real, esto podría leer una propiedad de configuración
-        // Para este ejemplo, asumimos que estamos en desarrollo para facilitar pruebas
-        return true; // Cambiar a false en producción
+        return false; // Cambiar a false para deshabilitar el modo desarrollo
     }
 }

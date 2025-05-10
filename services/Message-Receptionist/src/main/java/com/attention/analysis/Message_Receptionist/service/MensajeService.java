@@ -8,6 +8,8 @@ import com.attention.analysis.Message_Receptionist.repository.ConversacionReposi
 import com.attention.analysis.Message_Receptionist.repository.MensajeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -16,6 +18,8 @@ import java.util.Optional;
 
 @Service
 public class MensajeService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MensajeService.class);
 
     private final MensajeRepository mensajeRepository;
     private final ConversacionRepository conversacionRepository;
@@ -48,7 +52,8 @@ public class MensajeService {
         Optional<Empresa> empresaOpt = empresaService.validarNumeroEmpresa(numeroDestinatario);
         
         if (empresaOpt.isEmpty()) {
-            return false; // No es un mensaje destinado a una empresa registrada
+            logger.warn("Mensaje descartado: no corresponde a una empresa registrada");
+            return false; // Importante: retornar false para indicar que el mensaje no se procesó
         }
         
         Empresa empresa = empresaOpt.get();

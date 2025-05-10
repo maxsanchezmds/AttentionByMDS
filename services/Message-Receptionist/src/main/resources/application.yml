@@ -7,7 +7,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop # Cambia a 'update' o 'validate' en producción
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

@@ -61,10 +61,10 @@ public class EmpresaService {
         }
     }
 
-    public Optional<Empresa> validarNumeroEmpresa(String numeroTelefono) {
-        logger.info("Validando número de teléfono: {}", numeroTelefono);
+    public Optional<Empresa> validarNumeroEmpresa(String displayPhoneNumber) {
+        logger.info("Validando número de teléfono de empresa: {}", displayPhoneNumber);
         
-        // Flujo normal con servicio externo
+        // Obtener lista de empresas del servicio de autenticación
         List<Empresa> empresas = obtenerEmpresas();
         
         if (empresas.isEmpty()) {
@@ -72,20 +72,22 @@ public class EmpresaService {
             return Optional.empty();
         }
         
-        for (Empresa empresa : empresas) {
-            String telefonoEmpresa = limpiarNumeroTelefono(empresa.getTelefonoWhatsapp());
-            String telefonoCliente = limpiarNumeroTelefono(numeroTelefono);
-            
-            logger.debug("Comparando: Empresa [{}] vs Teléfono [{}]", telefonoEmpresa, telefonoCliente);
-            
-            if (validarCoincidenciaNumeros(telefonoEmpresa, telefonoCliente)) {
-                logger.info("Coincidencia encontrada con empresa ID: {}", empresa.getId());
-                return Optional.of(empresa);
-            }
-        }
+        // Limpiar el número que viene en el mensaje
+        String numeroLimpio = limpiarNumeroTelefono(displayPhoneNumber);
         
-        logger.warn("No se encontró coincidencia para el número: {}", numeroTelefono);
-        return Optional.empty();
+        // Buscar coincidencia con alguna empresa
+        return empresas.stream()
+            .filter(empresa -> {
+                String telefonoEmpresa = limpiarNumeroTelefono(empresa.getTelefonoWhatsapp());
+                boolean coincide = validarCoincidenciaNumeros(telefonoEmpresa, numeroLimpio);
+                
+                if (coincide) {
+                    logger.info("Coincidencia encontrada con empresa ID: {}", empresa.getId());
+                }
+                
+                return coincide;
+            })
+            .findFirst();
     }
     
     private Optional<Empresa> obtenerEmpresasFallback(String numeroTelefono) {

@@ -1,6 +1,6 @@
 package com.attention.analysis.sentiment_service.controller;
 
-import com.attention.analysis.sentiment_service.dto.MensajeDTO;
+import com.attention.analysis.sentiment_service.dto.MensajeDTO; //OJO AL DATO 
 import com.attention.analysis.sentiment_service.model.Sentiment;
 import com.attention.analysis.sentiment_service.model.SvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;

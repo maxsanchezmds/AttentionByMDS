@@ -27,9 +27,18 @@ service:
   # Servicio de análisis de sentimientos
   sentiment:
     url: http://localhost:${SENTIMENT_SERVICE_PORT}/api/sentiment
+  # Servicio de control de accesos
+  access:
+    url: http://localhost:${ACCESS_SERVICE_PORT}/api/access
 
 # Configuración de seguridad
 application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
+
+# Configuración de logging
+logging:
+  level:
+    com.attention.analysis.Message_Receptionist: DEBUG
+    org.springframework.web: INFO

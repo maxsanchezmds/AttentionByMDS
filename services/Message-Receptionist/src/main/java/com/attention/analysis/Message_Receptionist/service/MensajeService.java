@@ -26,13 +26,16 @@ public class MensajeService {
     private final MensajeRepository mensajeRepository;
     private final ConversacionRepository conversacionRepository;
     private final EmpresaService empresaService;
+    private final AccessServiceClient accessServiceClient;
 
     public MensajeService(MensajeRepository mensajeRepository, 
                          ConversacionRepository conversacionRepository,
-                         EmpresaService empresaService) {
+                         EmpresaService empresaService,
+                         AccessServiceClient accessServiceClient) {
         this.mensajeRepository = mensajeRepository;
         this.conversacionRepository = conversacionRepository;
         this.empresaService = empresaService;
+        this.accessServiceClient = accessServiceClient;
     }
 
     @Transactional
@@ -96,6 +99,10 @@ public class MensajeService {
             mensaje.setEsDeEjecutivo(false); // Mensaje de cliente
             
             mensajeRepository.save(mensaje);
+            
+            // Notificar al Access Service
+            logger.info("Notificando a Access Service sobre la conversación ID: {}", conversacion.getId());
+            accessServiceClient.notificarAcceso(conversacion.getId(), whatsappMessage);
             
             return true;
         } catch (Exception e) {

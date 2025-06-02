@@ -34,6 +34,7 @@ public class SentimentController {
 
     @Autowired
     private SvgSentimentRepository svgSentimentRepository;
+    
     @GetMapping("/analisis/{idConversacion}")
     public ResponseEntity<?> obtenerAnalisisPorConversacion(@PathVariable String idConversacion) {
         logger.info("Solicitando análisis para conversación: {}", idConversacion);

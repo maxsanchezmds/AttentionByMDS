@@ -7,3 +7,17 @@ DTO: Define objetos de transferencia de datos
 Service: Implementa la lógica de negocio
 Controller: Crea los endpoints REST
 Config: Configura aspectos como seguridad, base de datos, etc.
+
+
+o así
+
+Este es el orden apropiado para construir un microservicio
+Model (Modelo)
+DTO (Data Transfer Object)
+Repository (Repositorio)
+Service (Servicio)
+Controller (Controlador)
+Config (Configuración)
+
+
+Los DTOs son objetos que usamos para transferir datos entre capas de la aplicación, especialmente útiles para las API REST.

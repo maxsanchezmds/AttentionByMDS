@@ -26,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final AccessServiceClient accessServiceClient;
 
     @Transactional
     public AuthResponseDTO registrarEmpresa(RegistroEmpresaDTO request) {
@@ -72,6 +73,9 @@ public class AuthService {
                 .build();
         
         usuarioRepository.save(usuario);
+        
+        // Crear los accesos en el servicio de accesos
+        accessServiceClient.crearAccesosEmpresa(empresa.getId());
         
         // Generar el token JWT
         String jwtToken = jwtService.generateToken(usuario);

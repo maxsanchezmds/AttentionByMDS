@@ -2,9 +2,9 @@ spring:
   application:
     name: message-receptionist
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:whatsapp_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
   jpa:
     hibernate:
       ddl-auto: create-drop # Cambia a 'update' o 'validate' en producción
@@ -14,7 +14,7 @@ spring:
         format_sql: true
 
 server:
-  port: ${MESSAGE_RECEIVER_PORT}
+  port: ${MESSAGE_RECEIVER_PORT:8081}
   servlet:
     context-path: /api/messages
 
@@ -23,13 +23,22 @@ service:
   # Servicio de empresas (AUTH)
   empresas:
     # Importante: el host del servicio auth es diferente de la base de datos
-    url: http://localhost:${AUTH_SERVICE_PORT}/api/auth/integracion/empresas/whatsapp
+    url: http://localhost:${AUTH_SERVICE_PORT:8083}/api/auth/integracion/empresas/whatsapp
   # Servicio de análisis de sentimientos
   sentiment:
-    url: http://localhost:${SENTIMENT_SERVICE_PORT}/api/sentiment
+    url: http://localhost:${SENTIMENT_SERVICE_PORT:8086}/api/sentiment
+  # Servicio de control de accesos
+  access:
+    url: http://localhost:${ACCESS_SERVICE_PORT:8085}/api/access
 
 # Configuración de seguridad
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET_KEY}
+      secret-key: ${JWT_SECRET_KEY:default-secret-key-change-in-production}
+
+# Configuración de logging
+logging:
+  level:
+    com.attention.analysis.Message_Receptionist: DEBUG
+    org.springframework.web: INFO

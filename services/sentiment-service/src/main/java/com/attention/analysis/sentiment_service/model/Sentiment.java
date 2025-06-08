@@ -16,7 +16,7 @@ public class Sentiment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "id_empresa")
     private Long idEmpresa;
     

@@ -1,11 +1,13 @@
 package com.attention.analysis.Message_Receptionist.controller;
 
 import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
+import com.attention.analysis.Message_Receptionist.dto.EjecutivoMensajeRequest;
 import com.attention.analysis.Message_Receptionist.service.MensajeService;
 import com.attention.analysis.Message_Receptionist.model.Mensaje;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -27,6 +29,17 @@ public class WhatsappController {
             return ResponseEntity.ok("Mensaje procesado correctamente");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo procesar el mensaje");
+        }
+    }
+    
+    @PostMapping("/ejecutivo/mensaje")
+    public ResponseEntity<String> enviarMensajeEjecutivo(@Valid @RequestBody EjecutivoMensajeRequest request) {
+        boolean procesado = mensajeService.procesarMensajeEjecutivo(request);
+        
+        if (procesado) {
+            return ResponseEntity.ok("Mensaje del ejecutivo procesado correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo procesar el mensaje del ejecutivo");
         }
     }
 

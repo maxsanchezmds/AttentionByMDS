@@ -1,0 +1,1 @@
+Todo lo que vaya en repository deben ser interfaces, no clases. (Indiscutiblemente)

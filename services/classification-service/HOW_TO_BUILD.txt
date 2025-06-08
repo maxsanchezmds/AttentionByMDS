@@ -1,0 +1,23 @@
+Primero, configura tu archivo pom.xml (si estás usando Maven) o build.gradle (si estás usando Gradle) con las dependencias necesarias.
+Luego, sigue este orden para desarrollar tu microservicio:
+
+Model: Define tus entidades de dominio
+Repository: Crea las interfaces para acceder a la base de datos
+DTO: Define objetos de transferencia de datos
+Service: Implementa la lógica de negocio
+Controller: Crea los endpoints REST
+Config: Configura aspectos como seguridad, base de datos, etc.
+
+
+o así
+
+Este es el orden apropiado para construir un microservicio
+Model (Modelo)
+DTO (Data Transfer Object)
+Repository (Repositorio)
+Service (Servicio)
+Controller (Controlador)
+Config (Configuración)
+
+
+Los DTOs son objetos que usamos para transferir datos entre capas de la aplicación, especialmente útiles para las API REST.

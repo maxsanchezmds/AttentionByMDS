@@ -27,4 +27,10 @@ public class Mensaje {
 
     @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
+    
+    @Column(name = "es_de_ejecutivo", nullable = false)
+    private boolean esDeEjecutivo = false;
+    
+    @Column(name = "nombre_ejecutivo")
+    private String nombreEjecutivo;
 }

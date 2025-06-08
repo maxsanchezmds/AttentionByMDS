@@ -1,9 +1,7 @@
-# src/main/resources/application.yml
 server:
   port: ${AUTH_SERVICE_PORT:8083}
   servlet:
     context-path: /api/auth
-
 
 spring:
   application:
@@ -30,6 +28,10 @@ application:
       expiration: 86400000 # 1 día en milisegundos
       refresh-token:
         expiration: 604800000 # 7 días en milisegundos
+
+service:
+  access:
+    url: http://localhost:${ACCESS_SERVICE_PORT:8085}/api/access
 
 logging:
   level:

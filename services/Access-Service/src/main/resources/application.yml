@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: access-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME:whatsapp_db}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update # Crear o actualizar tablas automáticamente
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+server:
+  port: ${ACCESS_SERVICE_PORT:8085}
+
+# Servicios externos
+service:
+  # Servicio de empresas (AUTH)
+  empresas:
+    url: http://localhost:${AUTH_SERVICE_PORT}/api/auth/integracion/empresas/whatsapp
+  # Servicio de clasificación
+  classification:
+    url: http://localhost:${CLASSIFICATION_SERVICE_PORT:8087}/api/classification
+
+# Configuración de logging
+logging:
+  level:
+    com.attention.analysis.Access_Service: DEBUG
+    org.springframework.web: INFO

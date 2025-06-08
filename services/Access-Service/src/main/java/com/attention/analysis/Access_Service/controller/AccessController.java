@@ -32,6 +32,24 @@ public class AccessController {
         }
     }
     
+    @PostMapping("/empresa/crear-accesos")
+    public ResponseEntity<?> crearAccesosEmpresa(@RequestBody Acceso acceso) {
+        try {
+            // Verificar si ya existen accesos para esta empresa
+            if (accessService.obtenerAccesosPorEmpresa(acceso.getIdEmpresa()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Ya existen accesos configurados para esta empresa");
+            }
+            
+            // Guardar los nuevos accesos
+            Acceso accesoGuardado = accessService.crearAccesos(acceso);
+            return ResponseEntity.ok(accesoGuardado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear los accesos: " + e.getMessage());
+        }
+    }
+    
     @GetMapping("/empresa/{idEmpresa}")
     public ResponseEntity<?> obtenerAccesosPorEmpresa(@PathVariable Long idEmpresa) {
         return accessService.obtenerAccesosPorEmpresa(idEmpresa)

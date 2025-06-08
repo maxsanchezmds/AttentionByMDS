@@ -19,10 +19,14 @@ public class AccessService {
     
     private final AccesoRepository accesoRepository;
     private final EmpresaService empresaService;
+    private final ClassificationServiceClient classificationServiceClient;
     
-    public AccessService(AccesoRepository accesoRepository, EmpresaService empresaService) {
+    public AccessService(AccesoRepository accesoRepository, 
+                        EmpresaService empresaService,
+                        ClassificationServiceClient classificationServiceClient) {
         this.accesoRepository = accesoRepository;
         this.empresaService = empresaService;
+        this.classificationServiceClient = classificationServiceClient;
     }
     
     @Transactional
@@ -72,7 +76,18 @@ public class AccessService {
             logger.info("Nuevo registro de accesos creado para empresa ID: {}", empresa.getId());
         }
         
+        // Verificar si la empresa tiene habilitado el acceso a clasificación
+        if (acceso.getClassificationAccess()) {
+            logger.info("Empresa {} tiene acceso a clasificación. Solicitando clasificación para conversación {}", 
+                       empresa.getId(), request.getIdConversacion());
+            classificationServiceClient.solicitarClasificacion(request.getIdConversacion());
+        }
+        
         return acceso;
+    }
+    
+    public Acceso crearAccesos(Acceso acceso) {
+        return accesoRepository.save(acceso);
     }
     
     public Optional<Acceso> obtenerAccesosPorEmpresa(Long idEmpresa) {

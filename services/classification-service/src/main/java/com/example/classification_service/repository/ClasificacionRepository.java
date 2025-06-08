@@ -1,12 +1,13 @@
-package com.example.classification_service.repository;
+package com.attention.analysis.Classification_Service.repository;
 
-import com.example.classification_service.model.Clasificacion; // Importa la clase Clasificacion que será la que crearemos en la base de datos
+import com.attention.analysis.Classification_Service.model.Clasificacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
-@Repository // Indica que la siguiente interfaz es un repositorio
+import java.util.Optional;
+
+@Repository
 public interface ClasificacionRepository extends JpaRepository<Clasificacion, Long> {
-    List <Clasificacion> findByIdEmpresa(Long IdEmpresa);
-    List <Clasificacion> findByIdCliente(Long IdCliente);
+    Optional<Clasificacion> findByIdConversacion(Long idConversacion);
+    boolean existsByIdConversacion(Long idConversacion);
 }

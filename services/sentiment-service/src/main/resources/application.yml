@@ -7,16 +7,20 @@ spring:
     password: ${DB_PASSWORD:postgres}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+    show-sql: false
 
 server:
-  port: ${SENTIMENT_SERVICE_PORT:8082}
-  servlet:
-    context-path: /api/sentiment
+  port: ${SENTIMENT_SERVICE_PORT:8086}
+
+# Servicios externos
+service:
+  message-receptionist:
+    url: http://localhost:${MESSAGE_RECEIVER_PORT:8081}/api/messages
 
 openai:
   api:
@@ -27,3 +31,10 @@ application:
   security:
     jwt:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+
+# Configuración de logging
+logging:
+  level:
+    com.attention.analysis.sentiment_service: INFO
+    org.springframework.web: WARN
+    org.springframework.web.reactive.function.client: DEBUG

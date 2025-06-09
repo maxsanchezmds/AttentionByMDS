@@ -1,15 +1,24 @@
 package com.attention.analysis.sentiment_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
 public class MensajeDTO {
-    private String contenido_mensaje;
-    private String id_conversacion;
-    private Long id_empresa;
+    private Long id;
+    private String mensaje;
+    private LocalDateTime fecha;
+    private boolean esDeEjecutivo;
+    private String nombreEjecutivo;
+    private ConversacionDTO conversacion;
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime fecha_envio;
+    @Data
+    public static class ConversacionDTO {
+        private Long id;
+        private LocalDateTime fechaCreacion;
+        private LocalDateTime fechaActualizacion;
+        private String telefonoCliente;
+        private String correoEmpresa;
+        private Long idEmpresa;
+    }
 }

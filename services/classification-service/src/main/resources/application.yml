@@ -13,7 +13,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+    show-sql: false # Cambiado a false para reducir logs en producción
 
 server:
   port: ${CLASSIFICATION_SERVICE_PORT:8087}
@@ -21,7 +21,7 @@ server:
 # Servicios externos
 service:
   message-receptionist:
-    url: http://localhost:${MESSAGE_RECEIVER_PORT:8084}/api/messages
+    url: http://localhost:${MESSAGE_RECEIVER_PORT:8081}/api/messages
 
 # Configuración de OpenAI
 openai:
@@ -32,5 +32,8 @@ openai:
 # Configuración de logging
 logging:
   level:
-    com.attention.analysis.Classification_Service: DEBUG
-    org.springframework.web: INFO
+    com.attention.analysis.Classification_Service: INFO
+    org.springframework.web: WARN
+    org.springframework.web.reactive.function.client: DEBUG
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN

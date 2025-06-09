@@ -36,24 +36,49 @@ public class OpenAIService {
     
     public String clasificarConversacion(String conversacionFormateada) {
         String systemPrompt = """
-            Eres un asistente especializado en clasificar conversaciones de atención al cliente.
+            Actúas como un agente experto en análisis de conversaciones, con alta capacidad para evaluar mensajes utilizando lógica, criterio y sentido común. Tu tarea es clasificar la urgencia de cada conversación de manera objetiva. No te dejes guiar únicamente por las palabras utilizadas por el cliente; tú decides si la situación es realmente urgente o no.
+
+            Solo puedes asignar una de las siguientes tres categorías a cada conversación: URGENTE, MODERADA, LEVE
+
+            Para tomar tu decisión, analiza cuidadosamente los siguientes factores:
+
+            ¿El cliente está exagerando o dramatizando la situación sin justificación real?
+
+            ¿El mensaje del cliente es coherente, lógico y tiene fundamentos?
+
+            ¿El contenido representa un riesgo real para la empresa, ya sea económico, legal o en términos de reputación pública?
+
+            ¿El cliente está haciendo una pregunta por primera vez?
+
+            → Clasifícalo como LEVE, sin importar el contenido.
+
+            ¿El cliente ha repetido muchas veces una misma pregunta sin recibir respuesta?
+
+            → Clasifícalo como URGENTE.
+
+            ¿El cliente ha repetido muchas veces una pregunta ya respondida recientemente?
+
+            → Clasifícalo como LEVE (indica comportamiento insistente sin justificación).
+
+            ¿El cliente repite mensajes para llamar la atención?
+
+            Evalúa el motivo real de su insistencia:
+
+            Si el motivo es válido y crítico, clasifícalo como URGENTE.
+
+            Si es importante pero no crítico, clasifícalo como MODERADA.
+
+            Si el motivo es menor o irrelevante, clasifícalo como LEVE, sin importar la insistencia.
             
-            Debes clasificar cada conversación en una de estas tres categorías:
-            - URGENTE: Situaciones que requieren atención inmediata
-            - MODERADA: Situaciones que requieren atención pero no son críticas
-            - LEVE: Consultas generales o situaciones de baja prioridad
+            **Enfócate principalmente en los mensajes más recientes** para determinar el estado actual de la conversación.
             
-            Para clasificar, considera:
-            1. ¿Se le respondió al cliente? Si no tiene respuesta y el mensaje es de hace tiempo, puede ser urgente.
-            2. ¿Cuál es el sentimiento del cliente? (negativo = más urgente, positivo = menos urgente)
-            3. ¿El cliente expresa urgencia explícitamente? (palabras como "urgente", "ahora", "inmediato", etc.)
-            4. ¿El cliente recibió respuesta pero sigue insistiendo? Esto puede indicar que no quedó satisfecho.
-            
+            **No te dejes influenciar por el tono emocional del cliente, o la insistencia sin motivo** Tu objetivo es clasificar la urgencia de la conversación de manera objetiva, basándote en los hechos y el contexto proporcionado.
+
             Tu respuesta debe ser ÚNICAMENTE una de estas tres palabras: URGENTE, MODERADA o LEVE.
             No agregues explicaciones ni texto adicional.
             """;
         
-        String userPrompt = "Clasifica la siguiente conversación:\n\n" + conversacionFormateada;
+        String userPrompt = "Clasifica la siguiente conversación basándote en los mensajes más recientes:\n\n" + conversacionFormateada;
         
         List<OpenAIRequest.Message> messages = new ArrayList<>();
         messages.add(new OpenAIRequest.Message("system", systemPrompt));
@@ -66,6 +91,8 @@ public class OpenAIService {
         request.setMaxTokens(10); // Solo necesitamos una palabra
         
         try {
+            logger.debug("Enviando solicitud a OpenAI para clasificación...");
+            
             OpenAIResponse response = webClient.post()
                     .uri("/v1/chat/completions")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -73,19 +100,38 @@ public class OpenAIService {
                     .retrieve()
                     .bodyToMono(OpenAIResponse.class)
                     .timeout(Duration.ofSeconds(30))
+                    .onErrorResume(error -> {
+                        logger.error("Error en llamada a OpenAI: {}", error.getMessage());
+                        return Mono.empty();
+                    })
                     .block();
             
             if (response != null && response.getChoices() != null && !response.getChoices().isEmpty()) {
                 String clasificacion = response.getChoices().get(0).getMessage().getContent().trim().toUpperCase();
-                logger.info("Clasificación obtenida: {}", clasificacion);
-                return clasificacion;
+                logger.info("Clasificación obtenida de OpenAI: {}", clasificacion);
+                
+                // Validar que la respuesta sea una de las clasificaciones esperadas
+                if (clasificacion.equals("URGENTE") || clasificacion.equals("MODERADA") || clasificacion.equals("LEVE")) {
+                    return clasificacion;
+                } else {
+                    logger.warn("Clasificación no válida recibida: {}. Usando MODERADA por defecto.", clasificacion);
+                    return "MODERADA";
+                }
             }
             
-            throw new RuntimeException("No se obtuvo respuesta de OpenAI");
+            logger.error("No se obtuvo respuesta válida de OpenAI");
+            return "MODERADA"; // Valor por defecto
             
         } catch (Exception e) {
             logger.error("Error al clasificar con OpenAI: {}", e.getMessage(), e);
-            throw new RuntimeException("Error al clasificar la conversación", e);
+            return "MODERADA"; // Valor por defecto en caso de error
         }
+    }
+    
+    /**
+     * Método para obtener información sobre el uso de tokens (opcional)
+     */
+    public String obtenerInformacionModelo() {
+        return String.format("Usando modelo: %s", model);
     }
 }

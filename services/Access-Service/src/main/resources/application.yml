@@ -26,6 +26,9 @@ service:
   # Servicio de clasificación
   classification:
     url: http://localhost:${CLASSIFICATION_SERVICE_PORT:8087}/api/classification
+  # Servicio de análisis de sentimiento
+  sentiment:
+    url: http://localhost:${SENTIMENT_SERVICE_PORT:8086}/analizar
 
 # Configuración de logging
 logging:

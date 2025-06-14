@@ -21,7 +21,7 @@ public class Sentiment {
     private Long idEmpresa;
     
     @Column(name = "id_conversacion")
-    private String idConversacion;
+    private Long idConversacion; // Cambiado a Long para consistencia
     
     @Column(name = "contenido_mensaje", columnDefinition = "TEXT")
     private String contenidoMensaje;

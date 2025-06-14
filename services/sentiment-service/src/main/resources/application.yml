@@ -2,9 +2,11 @@ spring:
   application:
     name: sentiment-service
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${SENTIMENT_DB_NAME:sentiment_db}
+    # Usar la misma base de datos que los otros servicios
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:whatsapp_db}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,15 +24,11 @@ service:
   message-receptionist:
     url: http://localhost:${MESSAGE_RECEIVER_PORT:8081}/api/messages
 
+# Configuración de OpenAI
 openai:
   api:
-    key: ${OPENAI_API_KEY:your-default-key-here}
+    key: ${OPENAI_API_KEY:your-openai-api-key-here}
   model: ${OPENAI_MODEL:gpt-3.5-turbo}
-
-application:
-  security:
-    jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
 
 # Configuración de logging
 logging:
@@ -38,3 +36,5 @@ logging:
     com.attention.analysis.sentiment_service: INFO
     org.springframework.web: WARN
     org.springframework.web.reactive.function.client: DEBUG
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN

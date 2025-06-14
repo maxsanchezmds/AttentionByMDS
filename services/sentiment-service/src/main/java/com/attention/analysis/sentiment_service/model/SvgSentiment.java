@@ -15,7 +15,7 @@ public class SvgSentiment {
     
     @Id
     @Column(name = "id_conversacion")
-    private String idConversacion;
+    private Long idConversacion; // Cambiado a Long para consistencia
     
     @Column(name = "promedio_sentimiento")
     private Double promedioSentimiento;

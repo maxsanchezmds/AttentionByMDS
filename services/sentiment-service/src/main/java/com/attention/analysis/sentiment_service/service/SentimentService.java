@@ -8,7 +8,6 @@ import com.attention.analysis.sentiment_service.repository.SentimentRepository;
 import com.attention.analysis.sentiment_service.repository.SvgSentimentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,20 @@ public class SentimentService {
 
     private static final Logger logger = LoggerFactory.getLogger(SentimentService.class);
 
-    @Autowired
-    private MessageReceptionistClient messageReceptionistClient;
+    private final MessageReceptionistClient messageReceptionistClient;
+    private final OpenAIService openAIService;
+    private final SentimentRepository sentimentRepository;
+    private final SvgSentimentRepository svgSentimentRepository;
     
-    @Autowired
-    private OpenAIService openAIService;
-    
-    @Autowired
-    private SentimentRepository sentimentRepository;
-    
-    @Autowired
-    private SvgSentimentRepository svgSentimentRepository;
+    public SentimentService(MessageReceptionistClient messageReceptionistClient,
+                          OpenAIService openAIService,
+                          SentimentRepository sentimentRepository,
+                          SvgSentimentRepository svgSentimentRepository) {
+        this.messageReceptionistClient = messageReceptionistClient;
+        this.openAIService = openAIService;
+        this.sentimentRepository = sentimentRepository;
+        this.svgSentimentRepository = svgSentimentRepository;
+    }
     
     @Transactional
     public void procesarSentimiento(SentimentRequest request) {
@@ -59,7 +61,7 @@ public class SentimentService {
         // Guardar el análisis individual en la tabla sentiment
         Sentiment sentiment = new Sentiment();
         sentiment.setIdEmpresa(ultimoMensaje.getConversacion().getIdEmpresa());
-        sentiment.setIdConversacion(String.valueOf(idConversacion));
+        sentiment.setIdConversacion(idConversacion); // Ahora es Long
         sentiment.setContenidoMensaje(ultimoMensaje.getMensaje());
         sentiment.setSentimiento(valorSentimiento);
         sentiment.setFechaEnvio(ultimoMensaje.getFecha());
@@ -70,7 +72,7 @@ public class SentimentService {
         // Calcular el promedio de los últimos 10 mensajes
         Pageable ultimosDiez = PageRequest.of(0, 10);
         List<Sentiment> ultimosMensajes = sentimentRepository
-                .findLastMessagesByConversationId(String.valueOf(idConversacion), ultimosDiez);
+                .findLastMessagesByConversationId(idConversacion, ultimosDiez);
         
         double promedio = ultimosMensajes.stream()
                 .mapToInt(Sentiment::getSentimiento)
@@ -82,7 +84,7 @@ public class SentimentService {
         
         // Actualizar o insertar en la tabla svg_sentiment
         Optional<SvgSentiment> svgOptional = svgSentimentRepository
-                .findByIdConversacion(String.valueOf(idConversacion));
+                .findByIdConversacion(idConversacion);
         
         SvgSentiment svgSentiment;
         if (svgOptional.isPresent()) {
@@ -90,7 +92,7 @@ public class SentimentService {
             logger.info("Actualizando registro existente en svg_sentiment para conversación: {}", idConversacion);
         } else {
             svgSentiment = new SvgSentiment();
-            svgSentiment.setIdConversacion(String.valueOf(idConversacion));
+            svgSentiment.setIdConversacion(idConversacion); // Ahora es Long
             svgSentiment.setIdEmpresa(ultimoMensaje.getConversacion().getIdEmpresa());
             logger.info("Creando nuevo registro en svg_sentiment para conversación: {}", idConversacion);
         }
@@ -100,5 +102,24 @@ public class SentimentService {
         
         svgSentimentRepository.save(svgSentiment);
         logger.info("Registro svg_sentiment guardado con éxito. Promedio: {}", promedio);
+    }
+    
+    // Método para análisis individual de mensajes (compatibilidad)
+    @Transactional
+    public void analizarMensaje(MensajeDTO mensajeDTO) {
+        logger.info("Analizando mensaje individual para conversación: {}", 
+                   mensajeDTO.getConversacion().getId());
+        
+        Integer valorSentimiento = openAIService.analizarSentimiento(mensajeDTO.getMensaje());
+        
+        Sentiment sentiment = new Sentiment();
+        sentiment.setIdEmpresa(mensajeDTO.getConversacion().getIdEmpresa());
+        sentiment.setIdConversacion(mensajeDTO.getConversacion().getId());
+        sentiment.setContenidoMensaje(mensajeDTO.getMensaje());
+        sentiment.setSentimiento(valorSentimiento);
+        sentiment.setFechaEnvio(mensajeDTO.getFecha());
+        
+        sentimentRepository.save(sentiment);
+        logger.info("Análisis de sentimiento individual guardado: valor={}", valorSentimiento);
     }
 }

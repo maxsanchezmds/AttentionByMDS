@@ -20,13 +20,16 @@ public class AccessService {
     private final AccesoRepository accesoRepository;
     private final EmpresaService empresaService;
     private final ClassificationServiceClient classificationServiceClient;
+    private final SentimentServiceClient sentimentServiceClient;
     
     public AccessService(AccesoRepository accesoRepository, 
                         EmpresaService empresaService,
-                        ClassificationServiceClient classificationServiceClient) {
+                        ClassificationServiceClient classificationServiceClient,
+                        SentimentServiceClient sentimentServiceClient) {
         this.accesoRepository = accesoRepository;
         this.empresaService = empresaService;
         this.classificationServiceClient = classificationServiceClient;
+        this.sentimentServiceClient = sentimentServiceClient;
     }
     
     @Transactional
@@ -81,6 +84,13 @@ public class AccessService {
             logger.info("Empresa {} tiene acceso a clasificación. Solicitando clasificación para conversación {}", 
                        empresa.getId(), request.getIdConversacion());
             classificationServiceClient.solicitarClasificacion(request.getIdConversacion());
+        }
+        
+        // Verificar si la empresa tiene habilitado el acceso a análisis de sentimiento
+        if (acceso.getSentimentAccess()) {
+            logger.info("Empresa {} tiene acceso a análisis de sentimiento. Solicitando análisis para conversación {}", 
+                       empresa.getId(), request.getIdConversacion());
+            sentimentServiceClient.solicitarAnalisisSentimiento(request.getIdConversacion(), whatsappMessage);
         }
         
         return acceso;

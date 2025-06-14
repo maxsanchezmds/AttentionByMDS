@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SvgSentimentRepository extends JpaRepository<SvgSentiment, String> {
+public interface SvgSentimentRepository extends JpaRepository<SvgSentiment, Long> {
     
-    Optional<SvgSentiment> findByIdConversacion(String idConversacion);
+    Optional<SvgSentiment> findByIdConversacion(Long idConversacion);
 }

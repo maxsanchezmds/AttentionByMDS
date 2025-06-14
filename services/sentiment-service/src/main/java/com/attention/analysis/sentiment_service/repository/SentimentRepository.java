@@ -11,5 +11,5 @@ import java.util.List;
 public interface SentimentRepository extends JpaRepository<Sentiment, Long> {
     
     @Query("SELECT s FROM Sentiment s WHERE s.idConversacion = ?1 ORDER BY s.fechaEnvio DESC")
-    List<Sentiment> findLastMessagesByConversationId(String idConversacion, Pageable pageable);
+    List<Sentiment> findLastMessagesByConversationId(Long idConversacion, Pageable pageable);
 }

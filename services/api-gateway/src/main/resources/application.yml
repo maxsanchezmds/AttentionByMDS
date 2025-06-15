@@ -1,0 +1,79 @@
+server:
+  port: ${API_GATEWAY_PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  
+  # Spring Cloud Gateway Configuration
+  cloud:
+    gateway:
+      # Global CORS
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+      
+      # Default filters para todas las rutas
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - AddResponseHeader=X-Powered-By, ATTENTIONBYMDS-Gateway
+      
+      # Discovery client configuration (si usas service discovery)
+      discovery:
+        locator:
+          enabled: false
+
+# URLs de los microservicios
+services:
+  auth:
+    url: http://localhost:${AUTH_SERVICE_PORT:8083}
+  message-receptionist:
+    url: http://localhost:${MESSAGE_RECEIVER_PORT:8081}
+  access:
+    url: http://localhost:${ACCESS_SERVICE_PORT:8085}
+  sentiment:
+    url: http://localhost:${SENTIMENT_SERVICE_PORT:8086}
+  classification:
+    url: http://localhost:${CLASSIFICATION_SERVICE_PORT:8087}
+  attention-quality:
+    url: http://localhost:${ATTENTION_QUALITY_SERVICE_PORT:8088}
+  chat:
+    url: http://localhost:${CHAT_SERVICE_PORT:3000}
+
+# Configuración de seguridad JWT (debe coincidir con auth-service)
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+
+# Configuración de actuator para monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+
+# Configuración de logging
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.security: DEBUG
+    com.attention.analysis.api_gateway: DEBUG
+    reactor.netty: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Configuración de timeouts
+spring.cloud.gateway.httpclient:
+  connect-timeout: 10000
+  response-timeout: 30s

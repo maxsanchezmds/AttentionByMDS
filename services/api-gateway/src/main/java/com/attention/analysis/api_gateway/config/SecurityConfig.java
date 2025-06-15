@@ -26,6 +26,7 @@ public class SecurityConfig {
                         .pathMatchers("/api/auth/**").permitAll()
                         .pathMatchers("/webhook/**").permitAll()
                         .pathMatchers("/wsp/**").permitAll()
+                        .pathMatchers("/api/messages/webhook/**").permitAll()
                         .pathMatchers("/executive/**").permitAll()
                         .pathMatchers("/socket.io/**").permitAll()
                         .pathMatchers("/actuator/**").permitAll()

@@ -77,6 +77,7 @@ public class AuthenticationFilter implements GatewayFilter {
     private boolean isPublicRoute(String path) {
         return path.startsWith("/api/auth/") ||
                path.startsWith("/webhook/") ||
+               path.startsWith("/api/messages/webhook") ||
                path.startsWith("/actuator/") ||
                path.startsWith("/wsp/") ||
                path.startsWith("/executive/") ||

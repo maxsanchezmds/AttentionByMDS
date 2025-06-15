@@ -8,14 +8,13 @@ spring:
   # Spring Cloud Gateway Configuration
   cloud:
     gateway:
-      # Global CORS
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowed-origins: "*"
-            allowed-methods: "*"
-            allowed-headers: "*"
-            allow-credentials: true
+        globalcors:
+          cors-configurations:
+            '[/**]':
+              allowed-origin-patterns: "*"
+              allowed-methods: "*"
+              allowed-headers: "*"
+              allow-credentials: true
       
       # Default filters para todas las rutas
       default-filters:

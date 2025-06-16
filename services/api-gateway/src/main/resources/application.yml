@@ -8,23 +8,18 @@ spring:
   # Spring Cloud Gateway Configuration
   cloud:
     gateway:
-        globalcors:
-          cors-configurations:
-            '[/**]':
-              allowed-origin-patterns: "*"
-              allowed-methods: "*"
-              allowed-headers: "*"
-              allow-credentials: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
       
       # Default filters para todas las rutas
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
         - AddResponseHeader=X-Powered-By, ATTENTIONBYMDS-Gateway
-      
-      # Discovery client configuration (si usas service discovery)
-      discovery:
-        locator:
-          enabled: false
 
 # URLs de los microservicios
 services:

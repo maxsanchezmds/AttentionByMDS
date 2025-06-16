@@ -1,11 +1,13 @@
 package com.attention.analysis.api_gateway.config;
 
 import com.attention.analysis.api_gateway.filter.RateLimitingFilter;
+import com.attention.analysis.api_gateway.config.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 public class GatewayConfig {
@@ -30,6 +32,9 @@ public class GatewayConfig {
 
     @Value("${services.chat.url}")
     private String chatServiceUrl;
+
+    @Autowired
+    private AuthenticationFilter authenticationFilter;
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
@@ -56,7 +61,7 @@ public class GatewayConfig {
                 .route("message-receptionist", r -> r
                         .path("/api/messages/**")
                         .filters(f -> f
-                                .filter(new AuthenticationFilter())
+                                .filter(authenticationFilter)
                                 .addRequestHeader("X-Gateway-Source", "api-gateway"))
                         .uri(messageReceptionistUrl))
                 
@@ -64,7 +69,7 @@ public class GatewayConfig {
                 .route("access-service", r -> r
                         .path("/api/access/**")
                         .filters(f -> f
-                                .filter(new AuthenticationFilter())
+                                .filter(authenticationFilter)
                                 .addRequestHeader("X-Gateway-Source", "api-gateway"))
                         .uri(accessServiceUrl))
                 
@@ -72,7 +77,7 @@ public class GatewayConfig {
                 .route("sentiment-service", r -> r
                         .path("/api/sentiment/**")
                         .filters(f -> f
-                                .filter(new AuthenticationFilter())
+                                .filter(authenticationFilter)
                                 .addRequestHeader("X-Gateway-Source", "api-gateway"))
                         .uri(sentimentServiceUrl))
                 
@@ -80,7 +85,7 @@ public class GatewayConfig {
                 .route("classification-service", r -> r
                         .path("/api/classification/**")
                         .filters(f -> f
-                                .filter(new AuthenticationFilter())
+                                .filter(authenticationFilter)
                                 .addRequestHeader("X-Gateway-Source", "api-gateway"))
                         .uri(classificationServiceUrl))
                 
@@ -88,7 +93,7 @@ public class GatewayConfig {
                 .route("attention-quality-service", r -> r
                         .path("/api/attention-quality/**")
                         .filters(f -> f
-                                .filter(new AuthenticationFilter())
+                                .filter(authenticationFilter)
                                 .addRequestHeader("X-Gateway-Source", "api-gateway"))
                         .uri(attentionQualityServiceUrl))
                 

@@ -10,7 +10,6 @@ import com.attention.analysis.sentiment_service.repository.SvgSentimentRepositor
 import com.attention.analysis.sentiment_service.service.MessageReceptionistClient;
 import com.attention.analysis.sentiment_service.service.OpenAIService;
 import com.attention.analysis.sentiment_service.service.SentimentService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -43,11 +42,6 @@ class SentimentServiceTest {
 
     @InjectMocks
     private SentimentService sentimentService;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void procesarSentimiento_guardaNuevoPromedio() {

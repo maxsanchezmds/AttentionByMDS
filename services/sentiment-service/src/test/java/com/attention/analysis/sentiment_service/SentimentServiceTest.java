@@ -98,4 +98,72 @@ class SentimentServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> sentimentService.procesarSentimiento(request));
     }
+
+    @Test
+    void procesarSentimiento_actualizaPromedioExistente() {
+        Long conversacionId = 5L;
+        MensajeDTO.ConversacionDTO conv = new MensajeDTO.ConversacionDTO();
+        conv.setId(conversacionId);
+        conv.setIdEmpresa(3L);
+
+        MensajeDTO anterior = new MensajeDTO();
+        anterior.setMensaje("Anterior");
+        anterior.setFecha(LocalDateTime.now().minusMinutes(10));
+        anterior.setConversacion(conv);
+
+        MensajeDTO actual = new MensajeDTO();
+        actual.setMensaje("Actual");
+        actual.setFecha(LocalDateTime.now());
+        actual.setConversacion(conv);
+
+        when(messageReceptionistClient.obtenerMensajesConversacion(conversacionId))
+                .thenReturn(List.of(anterior, actual));
+        when(openAIService.analizarSentimiento(anyString())).thenReturn(80);
+
+        List<Sentiment> prev = List.of(
+                new Sentiment(1L, 3L, conversacionId, "msg1", 60, LocalDateTime.now()),
+                new Sentiment(2L, 3L, conversacionId, "msg2", 70, LocalDateTime.now())
+        );
+        when(sentimentRepository.findLastMessagesByConversationId(eq(conversacionId), any(Pageable.class)))
+                .thenReturn(prev);
+
+        SvgSentiment existing = new SvgSentiment(conversacionId, 65.0, LocalDateTime.now().minusMinutes(1), 3L);
+        when(svgSentimentRepository.findByIdConversacion(conversacionId)).thenReturn(Optional.of(existing));
+
+        SentimentRequest request = new SentimentRequest();
+        request.setIdConversacion(conversacionId);
+        request.setWhatsappMessage(new WhatsappMessage());
+
+        sentimentService.procesarSentimiento(request);
+
+        verify(sentimentRepository).save(any(Sentiment.class));
+        ArgumentCaptor<SvgSentiment> svgCaptor = ArgumentCaptor.forClass(SvgSentiment.class);
+        verify(svgSentimentRepository).save(svgCaptor.capture());
+        SvgSentiment savedSvg = svgCaptor.getValue();
+        assertEquals(conversacionId, savedSvg.getIdConversacion());
+        assertNotEquals(65.0, savedSvg.getPromedioSentimiento());
+    }
+
+    @Test
+    void analizarMensaje_guardaSentiment() {
+        when(openAIService.analizarSentimiento("Hola")).thenReturn(90);
+
+        MensajeDTO.ConversacionDTO conv = new MensajeDTO.ConversacionDTO();
+        conv.setId(8L);
+        conv.setIdEmpresa(4L);
+
+        MensajeDTO mensaje = new MensajeDTO();
+        mensaje.setMensaje("Hola");
+        mensaje.setFecha(LocalDateTime.now());
+        mensaje.setConversacion(conv);
+
+        sentimentService.analizarMensaje(mensaje);
+
+        ArgumentCaptor<Sentiment> captor = ArgumentCaptor.forClass(Sentiment.class);
+        verify(sentimentRepository).save(captor.capture());
+        Sentiment saved = captor.getValue();
+        assertEquals(4L, saved.getIdEmpresa());
+        assertEquals(8L, saved.getIdConversacion());
+        assertEquals(90, saved.getSentimiento());
+    }
 }

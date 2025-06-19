@@ -56,7 +56,8 @@ class SentimentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Análisis de sentimiento procesado")));
+                .andExpect(jsonPath("$.mensaje").value("Análisis de sentimiento procesado exitosamente"))
+                .andExpect(jsonPath("$.idConversacion").value(1L));
     }
 
     @Test

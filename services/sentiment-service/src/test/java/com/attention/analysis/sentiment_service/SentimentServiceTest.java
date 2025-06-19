@@ -120,12 +120,13 @@ class SentimentServiceTest {
                 .thenReturn(List.of(anterior, actual));
         when(openAIService.analizarSentimiento(anyString())).thenReturn(80);
 
-        List<Sentiment> prev = List.of(
+        List<Sentiment> prevConMensajes = List.of(
                 new Sentiment(1L, 3L, conversacionId, "msg1", 60, LocalDateTime.now()),
-                new Sentiment(2L, 3L, conversacionId, "msg2", 70, LocalDateTime.now())
+                new Sentiment(2L, 3L, conversacionId, "msg2", 70, LocalDateTime.now()),
+                new Sentiment(3L, 3L, conversacionId, "Actual", 80, LocalDateTime.now())
         );
         when(sentimentRepository.findLastMessagesByConversationId(eq(conversacionId), any(Pageable.class)))
-                .thenReturn(prev);
+                .thenReturn(prevConMensajes);
 
         SvgSentiment existing = new SvgSentiment(conversacionId, 65.0, LocalDateTime.now().minusMinutes(1), 3L);
         when(svgSentimentRepository.findByIdConversacion(conversacionId)).thenReturn(Optional.of(existing));
@@ -141,7 +142,7 @@ class SentimentServiceTest {
         verify(svgSentimentRepository).save(svgCaptor.capture());
         SvgSentiment savedSvg = svgCaptor.getValue();
         assertEquals(conversacionId, savedSvg.getIdConversacion());
-        assertNotEquals(65.0, savedSvg.getPromedioSentimiento());
+        assertEquals(70.0, savedSvg.getPromedioSentimiento());
     }
 
     @Test

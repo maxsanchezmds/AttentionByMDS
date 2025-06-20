@@ -4,9 +4,9 @@ import com.attention.analysis.sentiment_service.dto.MensajeDTO;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
 import com.attention.analysis.sentiment_service.dto.WhatsappMessage;
 import com.attention.analysis.sentiment_service.model.Sentiment;
-import com.attention.analysis.sentiment_service.model.SvgSentiment;
+import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;
-import com.attention.analysis.sentiment_service.repository.SvgSentimentRepository;
+import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
 import com.attention.analysis.sentiment_service.service.MessageReceptionistClient;
 import com.attention.analysis.sentiment_service.service.OpenAIService;
 import com.attention.analysis.sentiment_service.service.SentimentService;
@@ -37,7 +37,7 @@ class SentimentServiceTest {
     @Mock
     private SentimentRepository sentimentRepository;
     @Mock
-    private SvgSentimentRepository svgSentimentRepository;
+    private AvgSentimentRepository svgSentimentRepository;
 
     @InjectMocks
     private SentimentService sentimentService;
@@ -79,9 +79,9 @@ class SentimentServiceTest {
         assertEquals(2L, saved.getIdEmpresa());
         assertEquals(70, saved.getSentimiento());
 
-        ArgumentCaptor<SvgSentiment> svgCaptor = ArgumentCaptor.forClass(SvgSentiment.class);
+        ArgumentCaptor<AvgSentiment> svgCaptor = ArgumentCaptor.forClass(AvgSentiment.class);
         verify(svgSentimentRepository).save(svgCaptor.capture());
-        SvgSentiment svg = svgCaptor.getValue();
+        AvgSentiment svg = svgCaptor.getValue();
         assertEquals(conversacionId, svg.getIdConversacion());
         assertEquals(70.0, svg.getPromedioSentimiento());
     }
@@ -127,7 +127,7 @@ class SentimentServiceTest {
         when(sentimentRepository.findLastMessagesByConversationId(eq(conversacionId), any(Pageable.class)))
                 .thenReturn(prevConMensajes);
 
-        SvgSentiment existing = new SvgSentiment(conversacionId, 65.0, LocalDateTime.now().minusMinutes(1), 3L);
+        AvgSentiment existing = new AvgSentiment(conversacionId, 65.0, LocalDateTime.now().minusMinutes(1), 3L);
         when(svgSentimentRepository.findByIdConversacion(conversacionId)).thenReturn(Optional.of(existing));
 
         SentimentRequest request = new SentimentRequest();
@@ -137,9 +137,9 @@ class SentimentServiceTest {
         sentimentService.procesarSentimiento(request);
 
         verify(sentimentRepository).save(any(Sentiment.class));
-        ArgumentCaptor<SvgSentiment> svgCaptor = ArgumentCaptor.forClass(SvgSentiment.class);
+        ArgumentCaptor<AvgSentiment> svgCaptor = ArgumentCaptor.forClass(AvgSentiment.class);
         verify(svgSentimentRepository).save(svgCaptor.capture());
-        SvgSentiment savedSvg = svgCaptor.getValue();
+        AvgSentiment savedSvg = svgCaptor.getValue();
         assertEquals(conversacionId, savedSvg.getIdConversacion());
         assertEquals(70.0, savedSvg.getPromedioSentimiento());
     }

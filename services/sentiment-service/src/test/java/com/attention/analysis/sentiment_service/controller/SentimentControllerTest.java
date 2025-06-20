@@ -3,9 +3,9 @@ package com.attention.analysis.sentiment_service.controller;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
 import com.attention.analysis.sentiment_service.dto.WhatsappMessage;
 import com.attention.analysis.sentiment_service.model.Sentiment;
-import com.attention.analysis.sentiment_service.model.SvgSentiment;
+import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;
-import com.attention.analysis.sentiment_service.repository.SvgSentimentRepository;
+import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
 import com.attention.analysis.sentiment_service.service.SentimentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ class SentimentControllerTest {
     @MockBean
     private SentimentRepository sentimentRepository;
     @MockBean
-    private SvgSentimentRepository svgSentimentRepository;
+    private AvgSentimentRepository svgSentimentRepository;
 
     @Test
     void healthEndpoint_returnsUp() throws Exception {
@@ -62,7 +62,7 @@ class SentimentControllerTest {
 
     @Test
     void obtenerAnalisis_porPromedio() throws Exception {
-        SvgSentiment svg = new SvgSentiment(1L, 80.0, LocalDateTime.now(), 2L);
+        AvgSentiment svg = new AvgSentiment(1L, 80.0, LocalDateTime.now(), 2L);
         when(svgSentimentRepository.findByIdConversacion(1L)).thenReturn(Optional.of(svg));
 
         mockMvc.perform(get("/api/sentiment/analisis/1"))

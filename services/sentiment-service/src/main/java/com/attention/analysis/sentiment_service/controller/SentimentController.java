@@ -3,9 +3,11 @@ package com.attention.analysis.sentiment_service.controller;
 import com.attention.analysis.sentiment_service.dto.MensajeDTO;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
 import com.attention.analysis.sentiment_service.model.Sentiment;
-import com.attention.analysis.sentiment_service.model.SvgSentiment;
+import com.attention.analysis.sentiment_service.model.AvgSentiment;
+import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;
-import com.attention.analysis.sentiment_service.repository.SvgSentimentRepository;
+import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
+import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
 import com.attention.analysis.sentiment_service.service.SentimentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -27,14 +29,14 @@ public class SentimentController {
 
     private final SentimentService sentimentService;
     private final SentimentRepository sentimentRepository;
-    private final SvgSentimentRepository svgSentimentRepository;
+    private final AvgSentimentRepository avgSentimentRepository;
     
     public SentimentController(SentimentService sentimentService,
                              SentimentRepository sentimentRepository,
-                             SvgSentimentRepository svgSentimentRepository) {
+                             AvgSentimentRepository avgSentimentRepository) {
         this.sentimentService = sentimentService;
         this.sentimentRepository = sentimentRepository;
-        this.svgSentimentRepository = svgSentimentRepository;
+        this.avgSentimentRepository = avgSentimentRepository;
     }
     
     /**
@@ -84,13 +86,13 @@ public class SentimentController {
         logger.info("Solicitando análisis para conversación: {}", idConversacion);
         
         try {
-            // Buscar el promedio en svg_sentiment
-            Optional<SvgSentiment> svgSentiment = svgSentimentRepository.findByIdConversacion(idConversacion);
-            
-            if (svgSentiment.isPresent()) {
+            // Buscar el promedio en avg_sentiment
+            Optional<AvgSentiment> avgSentiment = avgSentimentRepository.findByIdConversacion(idConversacion);
+
+            if (avgSentiment.isPresent()) {
                 return ResponseEntity.ok(Map.of(
                     "tipo", "promedio",
-                    "data", svgSentiment.get()
+                    "data", avgSentiment.get()
                 ));
             } else {
                 // Buscar análisis individuales

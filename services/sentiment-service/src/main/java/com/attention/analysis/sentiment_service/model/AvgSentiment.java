@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "svg_sentiment")
+@Table(name = "avg_sentiment")
 @NoArgsConstructor
 @AllArgsConstructor
-public class SvgSentiment {
+public class AvgSentiment {
     
     @Id
     @Column(name = "id_conversacion")

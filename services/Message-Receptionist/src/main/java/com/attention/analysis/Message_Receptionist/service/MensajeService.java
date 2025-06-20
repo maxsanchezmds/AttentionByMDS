@@ -130,6 +130,7 @@ public class MensajeService {
             // Buscar la conversación existente con el cliente
             Optional<Conversacion> conversacionOpt = conversacionRepository.findByTelefonoCliente(request.getNumeroTelefonoCliente());
             
+            Conversacion conversacion;
             if (conversacionOpt.isEmpty()) {
                 logger.warn("No existe conversación previa con el cliente: {}", request.getNumeroTelefonoCliente());
                 // Crear nueva conversación si no existe
@@ -139,11 +140,12 @@ public class MensajeService {
                 nuevaConversacion.setCorreoEmpresa(empresa.getCorreoEmpresa());
                 nuevaConversacion.setFechaCreacion(fechaActual);
                 nuevaConversacion.setFechaActualizacion(fechaActual);
-                
-                conversacionOpt = Optional.of(conversacionRepository.save(nuevaConversacion));
+                conversacion = nuevaConversacion;
+
+            } else {
+                conversacion = conversacionOpt.get();
             }
             
-            Conversacion conversacion = conversacionOpt.get();
             
             // Actualizar fecha de actualización de la conversación
             conversacion.setFechaActualizacion(fechaActual);
@@ -181,7 +183,7 @@ public class MensajeService {
             nuevaConversacion.setFechaCreacion(fecha);
             nuevaConversacion.setFechaActualizacion(fecha);
             
-            return conversacionRepository.save(nuevaConversacion);
+            return nuevaConversacion;
         }
     }
 

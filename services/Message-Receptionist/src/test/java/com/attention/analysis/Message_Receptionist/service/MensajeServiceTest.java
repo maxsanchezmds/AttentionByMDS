@@ -84,7 +84,7 @@ class MensajeServiceTest {
         boolean result = mensajeService.procesarMensaje(msg);
 
         assertTrue(result);
-        verify(conversacionRepository).save(any(Conversacion.class));
+        verify(conversacionRepository, times(1)).save(any(Conversacion.class));
         verify(mensajeRepository).save(any(Mensaje.class));
         verify(accessServiceClient).notificarAcceso(eq(1L), eq(msg));
     }
@@ -127,7 +127,7 @@ class MensajeServiceTest {
         boolean result = mensajeService.procesarMensajeEjecutivo(req);
 
         assertTrue(result);
-        verify(conversacionRepository).save(any(Conversacion.class));
+        verify(conversacionRepository, times(1)).save(any(Conversacion.class));
         verify(mensajeRepository).save(argThat(m -> m.isEsDeEjecutivo()));
     }
 }

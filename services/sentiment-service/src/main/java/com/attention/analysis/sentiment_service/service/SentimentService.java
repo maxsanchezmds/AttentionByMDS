@@ -47,9 +47,21 @@ public class SentimentService {
 
         WhatsappMessage.Message message = whatsappMessage.getValue().getMessages().get(0);
         String texto = message.getText() != null ? message.getText().getBody() : "";
-        java.time.LocalDateTime fecha = java.time.LocalDateTime.ofInstant(
-                java.time.Instant.ofEpochSecond(Long.parseLong(message.getTimestamp())),
-                java.time.ZoneId.systemDefault());
+
+        java.time.LocalDateTime fecha;
+        String ts = message.getTimestamp();
+        try {
+            long epoch = Long.parseLong(ts);
+            if (ts.length() > 10) {
+                epoch /= 1000; // timestamp in milliseconds
+            }
+            fecha = java.time.LocalDateTime.ofInstant(
+                    java.time.Instant.ofEpochSecond(epoch),
+                    java.time.ZoneId.systemDefault());
+        } catch (Exception e) {
+            logger.warn("Timestamp inválido '{}' - se usará el momento actual", ts);
+            fecha = java.time.LocalDateTime.now();
+        }
 
         logger.info("Analizando sentimiento del mensaje recibido: {} caracteres", texto.length());
 

@@ -78,11 +78,23 @@ public class MensajeService {
             
             Empresa empresa2 = empresaOpt2.get();
             
-            // Timestamp del mensaje (convertir de epoch seconds a LocalDateTime)
-            LocalDateTime fechaMensaje = LocalDateTime.ofInstant(
-                Instant.ofEpochSecond(Long.parseLong(mensajeWA.getTimestamp())), 
-                ZoneId.systemDefault()
-            );
+            // Timestamp del mensaje. Intentamos convertir el valor proporcionado
+            // por WhatsApp; si no existe o falla la conversión, usamos la hora
+            // actual para evitar almacenar valores incorrectos.
+            LocalDateTime fechaMensaje;
+            try {
+                String ts = mensajeWA.getTimestamp();
+                if (ts != null && !ts.isEmpty()) {
+                    fechaMensaje = LocalDateTime.ofInstant(
+                        Instant.ofEpochSecond(Long.parseLong(ts)),
+                        ZoneId.systemDefault()
+                    );
+                } else {
+                    fechaMensaje = LocalDateTime.now();
+                }
+            } catch (Exception e) {
+                fechaMensaje = LocalDateTime.now();
+            }
             
             // Buscar o crear conversación
             Conversacion conversacion = obtenerOCrearConversacion(numeroTelefono, empresa2, fechaMensaje);

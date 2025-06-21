@@ -94,21 +94,24 @@ public class EmpresaService {
         // Eliminar todos los caracteres no numéricos
         return numero != null ? numero.replaceAll("[^0-9]", "") : "";
     }
-    
+    /**
+     * Verifica si dos números telefónicos coinciden exactamente después de
+     * eliminar los caracteres no numéricos.
+     *
+     * @param numero1 número telefónico de la empresa ya limpiado
+     * @param numero2 número telefónico recibido en el mensaje ya limpiado
+     * @return {@code true} si ambos números son no nulos y son idénticos
+     */
     private boolean validarCoincidenciaNumeros(String numero1, String numero2) {
-        // Verificar si hay al menos 8 dígitos consecutivos que coincidan
-        if (numero1 == null || numero2 == null || numero1.length() < 8 || numero2.length() < 8) {
+        if (numero1 == null || numero2 == null) {
             return false;
         }
         
-        for (int i = 0; i <= numero1.length() - 8; i++) {
-            String secuencia = numero1.substring(i, i + 8);
-            if (numero2.contains(secuencia)) {
-                logger.debug("Secuencia coincidente encontrada: {}", secuencia);
-                return true;
-            }
+        boolean coincide = numero1.equals(numero2);
+        if (coincide) {
+            logger.debug("Número coincidente encontrado: {}", numero1);
         }
         
-        return false;
+        return coincide;
     }
 }

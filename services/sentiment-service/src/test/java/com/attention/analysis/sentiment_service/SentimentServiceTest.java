@@ -20,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +42,25 @@ class SentimentServiceTest {
     @InjectMocks
     private SentimentService sentimentService;
 
+    private WhatsappMessage buildWhatsappMessage(String text) {
+        WhatsappMessage.Message msg = new WhatsappMessage.Message();
+        msg.setTimestamp("1700000000");
+        WhatsappMessage.Text txt = new WhatsappMessage.Text();
+        txt.setBody(text);
+        msg.setText(txt);
+
+        WhatsappMessage.Metadata metadata = new WhatsappMessage.Metadata();
+        metadata.setDisplay_phone_number("12345");
+
+        WhatsappMessage.Value value = new WhatsappMessage.Value();
+        value.setMetadata(metadata);
+        value.setMessages(List.of(msg));
+
+        WhatsappMessage whatsappMessage = new WhatsappMessage();
+        whatsappMessage.setValue(value);
+        return whatsappMessage;
+    }
+
     @Test
     void procesarSentimiento_guardaNuevoPromedio() {
         Long conversacionId = 1L;
@@ -60,7 +78,7 @@ class SentimentServiceTest {
 
         SentimentRequest request = new SentimentRequest();
         request.setIdConversacion(conversacionId);
-        request.setWhatsappMessage(new WhatsappMessage());
+        request.setWhatsappMessage(buildWhatsappMessage("Que tal?"));
 
         sentimentService.procesarSentimiento(request);
 
@@ -81,7 +99,6 @@ class SentimentServiceTest {
     @Test
     void procesarSentimiento_sinMensajes_lanzaExcepcion() {
 
-        when(empresaService.validarNumeroEmpresa(anyString())).thenReturn(Optional.empty());
         SentimentRequest request = new SentimentRequest();
         request.setIdConversacion(1L);
         request.setWhatsappMessage(new WhatsappMessage());
@@ -124,7 +141,7 @@ class SentimentServiceTest {
 
         SentimentRequest request = new SentimentRequest();
         request.setIdConversacion(conversacionId);
-        request.setWhatsappMessage(new WhatsappMessage());
+        request.setWhatsappMessage(buildWhatsappMessage("Nuevo"));
 
         sentimentService.procesarSentimiento(request);
 

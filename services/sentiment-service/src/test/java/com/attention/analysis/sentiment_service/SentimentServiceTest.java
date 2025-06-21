@@ -38,7 +38,8 @@ class SentimentServiceTest {
     private EmpresaService empresaService;
     @Mock
     private AvgSentimentRepository svgSentimentRepository;
-
+    @Mock
+    private SentimentRepository sentimentRepository;
     @InjectMocks
     private SentimentService sentimentService;
 

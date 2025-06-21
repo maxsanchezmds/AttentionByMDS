@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "conversaciones")
+@Table(name = "conversaciones",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"telefono_cliente", "id_empresa"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class Conversacion {
     @Column(name = "fecha_actualizacion", nullable = false)
     private LocalDateTime fechaActualizacion;
 
-    @Column(name = "telefono_cliente", nullable = false, unique = true)
+    @Column(name = "telefono_cliente", nullable = false)
     private String telefonoCliente;
 
     @Column(name = "correo_empresa", nullable = false)

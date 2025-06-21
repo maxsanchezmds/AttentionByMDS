@@ -72,7 +72,7 @@ class MensajeServiceTest {
         empresa.setCorreoEmpresa("mail@test.com");
 
         when(empresaService.validarNumeroEmpresa(anyString())).thenReturn(Optional.of(empresa));
-        when(conversacionRepository.findByTelefonoCliente("11111")).thenReturn(Optional.empty());
+        when(conversacionRepository.findByTelefonoClienteAndIdEmpresa("11111", 1L)).thenReturn(Optional.empty());
         when(conversacionRepository.save(any(Conversacion.class))).thenAnswer(inv -> {
             Conversacion c = inv.getArgument(0);
             c.setId(1L);
@@ -111,7 +111,7 @@ class MensajeServiceTest {
         empresa.setCorreoEmpresa("mail@corp.com");
 
         when(empresaService.validarNumeroEmpresa(anyString())).thenReturn(Optional.of(empresa));
-        when(conversacionRepository.findByTelefonoCliente("456")).thenReturn(Optional.empty());
+        when(conversacionRepository.findByTelefonoClienteAndIdEmpresa("456", 2L)).thenReturn(Optional.empty());
         when(conversacionRepository.save(any(Conversacion.class))).thenAnswer(inv -> {
             Conversacion c = inv.getArgument(0);
             c.setId(5L);

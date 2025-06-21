@@ -139,8 +139,9 @@ public class MensajeService {
             Empresa empresa = empresaOpt.get();
             LocalDateTime fechaActual = LocalDateTime.now();
             
-            // Buscar la conversación existente con el cliente
-            Optional<Conversacion> conversacionOpt = conversacionRepository.findByTelefonoCliente(request.getNumeroTelefonoCliente());
+            // Buscar la conversación existente con el cliente para esta empresa
+            Optional<Conversacion> conversacionOpt = conversacionRepository
+                    .findByTelefonoClienteAndIdEmpresa(request.getNumeroTelefonoCliente(), empresa.getId());
             
             Conversacion conversacion;
             if (conversacionOpt.isEmpty()) {
@@ -183,7 +184,8 @@ public class MensajeService {
     }
     
     private Conversacion obtenerOCrearConversacion(String telefonoCliente, Empresa empresa, LocalDateTime fecha) {
-        Optional<Conversacion> conversacionOpt = conversacionRepository.findByTelefonoCliente(telefonoCliente);
+        Optional<Conversacion> conversacionOpt = conversacionRepository
+                .findByTelefonoClienteAndIdEmpresa(telefonoCliente, empresa.getId());
         
         if (conversacionOpt.isPresent()) {
             return conversacionOpt.get();

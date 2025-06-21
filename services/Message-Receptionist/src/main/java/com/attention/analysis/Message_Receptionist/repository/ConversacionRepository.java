@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ConversacionRepository extends JpaRepository<Conversacion, Long> {
     Optional<Conversacion> findByTelefonoCliente(String telefonoCliente);
+    Optional<Conversacion> findByTelefonoClienteAndIdEmpresa(String telefonoCliente, Long idEmpresa);
 }

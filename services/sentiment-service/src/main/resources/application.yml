@@ -23,6 +23,8 @@ server:
 service:
   message-receptionist:
     url: http://localhost:${MESSAGE_RECEIVER_PORT:8081}/api/messages
+  empresas:
+    url: http://localhost:${AUTH_SERVICE_PORT:8083}/api/auth/integracion/empresas/whatsapp
 
 # Configuración de OpenAI
 openai:

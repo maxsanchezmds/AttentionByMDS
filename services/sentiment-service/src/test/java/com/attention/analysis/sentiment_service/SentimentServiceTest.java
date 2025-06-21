@@ -7,9 +7,10 @@ import com.attention.analysis.sentiment_service.model.Sentiment;
 import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;
 import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
-import com.attention.analysis.sentiment_service.service.MessageReceptionistClient;
 import com.attention.analysis.sentiment_service.service.OpenAIService;
+import com.attention.analysis.sentiment_service.service.EmpresaService;
 import com.attention.analysis.sentiment_service.service.SentimentService;
+import com.attention.analysis.sentiment_service.dto.Empresa;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -30,12 +31,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SentimentServiceTest {
 
-    @Mock
-    private MessageReceptionistClient messageReceptionistClient;
+
     @Mock
     private OpenAIService openAIService;
     @Mock
-    private SentimentRepository sentimentRepository;
+    private EmpresaService empresaService;
     @Mock
     private AvgSentimentRepository svgSentimentRepository;
 
@@ -49,18 +49,9 @@ class SentimentServiceTest {
         conv.setId(conversacionId);
         conv.setIdEmpresa(2L);
 
-        MensajeDTO m1 = new MensajeDTO();
-        m1.setMensaje("Hola");
-        m1.setFecha(LocalDateTime.now().minusMinutes(5));
-        m1.setConversacion(conv);
-
-        MensajeDTO m2 = new MensajeDTO();
-        m2.setMensaje("Que tal?");
-        m2.setFecha(LocalDateTime.now());
-        m2.setConversacion(conv);
-
-        when(messageReceptionistClient.obtenerMensajesConversacion(conversacionId))
-                .thenReturn(List.of(m1, m2));
+        Empresa empresa = new Empresa();
+        empresa.setId(2L);
+        when(empresaService.validarNumeroEmpresa(anyString())).thenReturn(Optional.of(empresa));
         when(openAIService.analizarSentimiento(anyString())).thenReturn(70);
         when(sentimentRepository.findLastMessagesByConversationId(eq(conversacionId), any(Pageable.class)))
                 .thenReturn(List.of(new Sentiment(null, 2L, conversacionId, "msg", 70, LocalDateTime.now())));
@@ -88,9 +79,8 @@ class SentimentServiceTest {
 
     @Test
     void procesarSentimiento_sinMensajes_lanzaExcepcion() {
-        when(messageReceptionistClient.obtenerMensajesConversacion(1L))
-                .thenReturn(Collections.emptyList());
 
+        when(empresaService.validarNumeroEmpresa(anyString())).thenReturn(Optional.empty());
         SentimentRequest request = new SentimentRequest();
         request.setIdConversacion(1L);
         request.setWhatsappMessage(new WhatsappMessage());
@@ -115,8 +105,9 @@ class SentimentServiceTest {
         actual.setFecha(LocalDateTime.now());
         actual.setConversacion(conv);
 
-        when(messageReceptionistClient.obtenerMensajesConversacion(conversacionId))
-                .thenReturn(List.of(anterior, actual));
+        Empresa empresa = new Empresa();
+        empresa.setId(3L);
+        when(empresaService.validarNumeroEmpresa(anyString())).thenReturn(Optional.of(empresa));
         when(openAIService.analizarSentimiento(anyString())).thenReturn(80);
 
         List<Sentiment> prevConMensajes = List.of(

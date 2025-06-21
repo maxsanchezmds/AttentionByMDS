@@ -3,10 +3,12 @@ package com.attention.analysis.sentiment_service.service;
 import com.attention.analysis.sentiment_service.dto.MensajeDTO;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
 import com.attention.analysis.sentiment_service.dto.WhatsappMessage;
+import com.attention.analysis.sentiment_service.dto.Empresa;
 import com.attention.analysis.sentiment_service.model.Sentiment;
 import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;
 import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
+import com.attention.analysis.sentiment_service.service.EmpresaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -23,13 +25,16 @@ public class SentimentService {
     private final OpenAIService openAIService;
     private final SentimentRepository sentimentRepository;
     private final AvgSentimentRepository avgSentimentRepository;
+    private final EmpresaService empresaService;
     
     public SentimentService(OpenAIService openAIService,
                         SentimentRepository sentimentRepository,
-                        AvgSentimentRepository avgSentimentRepository) {
+                        AvgSentimentRepository avgSentimentRepository,
+                        EmpresaService empresaService) {
         this.openAIService = openAIService;
         this.sentimentRepository = sentimentRepository;
         this.avgSentimentRepository = avgSentimentRepository;
+        this.empresaService = empresaService;
     }
     
     @Transactional
@@ -44,6 +49,11 @@ public class SentimentService {
             whatsappMessage.getValue().getMessages().isEmpty()) {
             throw new IllegalArgumentException("Estructura de mensaje WhatsApp inválida");
         }
+        String displayPhoneNumber = whatsappMessage.getValue().getMetadata().getDisplay_phone_number();
+        Long idEmpresa = empresaService
+                .validarNumeroEmpresa(displayPhoneNumber)
+                .map(Empresa::getId)
+                .orElse(null);
 
         WhatsappMessage.Message message = whatsappMessage.getValue().getMessages().get(0);
         String texto = message.getText() != null ? message.getText().getBody() : "";
@@ -68,6 +78,9 @@ public class SentimentService {
         Integer valorSentimiento = openAIService.analizarSentimiento(texto);
 
         Sentiment sentiment = new Sentiment();
+        if (idEmpresa != null) {
+            sentiment.setIdEmpresa(idEmpresa);
+        }
         sentiment.setIdConversacion(idConversacion);
         sentiment.setContenidoMensaje(texto);
         sentiment.setSentimiento(valorSentimiento);
@@ -102,7 +115,9 @@ public class SentimentService {
             avgSentiment.setIdConversacion(idConversacion);
             logger.info("Creando nuevo registro en avg_sentiment para conversación: {}", idConversacion);
         }
-        
+        if (idEmpresa != null) {
+            avgSentiment.setIdEmpresa(idEmpresa);
+        }
         avgSentiment.setPromedioSentimiento(promedio);
         avgSentiment.setFechaUltimoMensaje(fecha);
 

@@ -1,5 +1,5 @@
-# services/auth-service/Dockerfile
-FROM openjdk:17-jre-slim
+# Usar Eclipse Temurin (más moderno y mantenido)
+FROM eclipse-temurin:17-jre
 
 # Instalar curl para health checks
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*

@@ -1,4 +1,3 @@
-# services/chat-service/Dockerfile
 FROM node:18-alpine
 
 RUN apk add --no-cache curl

@@ -1,4 +1,4 @@
-package com.attention.analysis.auth_service.security;
+package com.attention.analysis.auth_service.service;
 
 import com.attention.analysis.auth_service.model.Usuario;
 import com.attention.analysis.auth_service.model.Rol;

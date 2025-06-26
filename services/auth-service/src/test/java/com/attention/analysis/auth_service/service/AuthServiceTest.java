@@ -7,6 +7,7 @@ import com.attention.analysis.auth_service.model.Usuario;
 import com.attention.analysis.auth_service.repository.EmpresaRepository;
 import com.attention.analysis.auth_service.repository.UsuarioRepository;
 import jakarta.servlet.http.Cookie;
+import com.attention.analysis.auth_service.security.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

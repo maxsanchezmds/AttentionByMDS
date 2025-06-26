@@ -2,6 +2,7 @@ package com.attention.analysis.auth_service.service;
 
 import com.attention.analysis.auth_service.model.Usuario;
 import com.attention.analysis.auth_service.model.Rol;
+import com.attention.analysis.auth_service.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;

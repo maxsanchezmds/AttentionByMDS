@@ -17,6 +17,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import jakarta.servlet.http.Cookie;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -88,7 +89,7 @@ class AuthenticationFilterTest {
     void validCookieToken_addedAsHeader() {
         String token = generateToken("cookie@test.com");
         MockServerHttpRequest request = MockServerHttpRequest.get("/api/protected")
-                .cookie(new javax.servlet.http.Cookie("jwt_token", token))
+                .cookie(new Cookie("jwt_token", token))
                 .build();
         MockServerWebExchange exchange = MockServerWebExchange.from(request);
         GatewayFilterChain chain = mock(GatewayFilterChain.class);

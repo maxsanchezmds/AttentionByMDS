@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service.service;
+package com.example.classification_service.service;
 
 import com.attention.analysis.Classification_Service.dto.ClassificationRequest;
 import com.attention.analysis.Classification_Service.dto.MensajeDTO;

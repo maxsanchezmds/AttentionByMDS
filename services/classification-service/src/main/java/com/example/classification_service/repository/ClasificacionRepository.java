@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service.repository;
+package com.example.classification_service.repository;
 
 import com.attention.analysis.Classification_Service.model.Clasificacion;
 import org.springframework.data.jpa.repository.JpaRepository;

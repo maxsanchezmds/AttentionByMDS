@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service.model;
+package com.example.classification_service.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

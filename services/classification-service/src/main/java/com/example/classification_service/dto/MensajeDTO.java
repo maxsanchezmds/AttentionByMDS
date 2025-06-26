@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service.dto;
+package com.example.classification_service.dto;
 
 import lombok.Data;
 import java.time.LocalDateTime;

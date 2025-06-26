@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service.config;
+package com.example.classification_service.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

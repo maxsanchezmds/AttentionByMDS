@@ -14,6 +14,7 @@
         <module>services/auth-service</module>
         <module>services/Message-Receptionist</module>
         <module>services/sentiment-service</module>
+        <module>services/classification-service</module>
     </modules>
 
     <properties>

@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service;
+package com.example.classification_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

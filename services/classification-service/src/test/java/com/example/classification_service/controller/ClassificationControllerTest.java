@@ -1,4 +1,4 @@
-package com.attention.analysis.Classification_Service.controller;
+package com.example.classification_service.controller;
 
 import com.attention.analysis.Classification_Service.dto.ClassificationRequest;
 import com.attention.analysis.Classification_Service.model.Clasificacion;

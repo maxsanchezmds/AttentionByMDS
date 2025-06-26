@@ -1,9 +1,9 @@
 package com.example.classification_service.service;
 
-import com.attention.analysis.Classification_Service.dto.ClassificationRequest;
-import com.attention.analysis.Classification_Service.dto.MensajeDTO;
-import com.attention.analysis.Classification_Service.model.Clasificacion;
-import com.attention.analysis.Classification_Service.repository.ClasificacionRepository;
+import com.example.classification_service.dto.ClassificationRequest;
+import com.example.classification_service.dto.MensajeDTO;
+import com.example.classification_service.model.Clasificacion;
+import com.example.classification_service.repository.ClasificacionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

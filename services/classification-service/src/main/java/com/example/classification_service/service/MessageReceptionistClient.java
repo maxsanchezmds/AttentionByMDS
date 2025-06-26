@@ -1,6 +1,6 @@
 package com.example.classification_service.service;
 
-import com.attention.analysis.Classification_Service.dto.MensajeDTO;
+import com.example.classification_service.dto.MensajeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

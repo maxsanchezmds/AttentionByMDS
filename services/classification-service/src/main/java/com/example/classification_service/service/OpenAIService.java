@@ -1,7 +1,7 @@
 package com.example.classification_service.service;
 
-import com.attention.analysis.Classification_Service.dto.OpenAIRequest;
-import com.attention.analysis.Classification_Service.dto.OpenAIResponse;
+import com.example.classification_service.dto.OpenAIRequest;
+import com.example.classification_service.dto.OpenAIResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

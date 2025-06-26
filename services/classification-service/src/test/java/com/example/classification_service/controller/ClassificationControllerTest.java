@@ -1,9 +1,9 @@
 package com.example.classification_service.controller;
 
-import com.attention.analysis.Classification_Service.dto.ClassificationRequest;
-import com.attention.analysis.Classification_Service.model.Clasificacion;
-import com.attention.analysis.Classification_Service.repository.ClasificacionRepository;
-import com.attention.analysis.Classification_Service.service.ClassificationService;
+import com.example.classification_service.dto.ClassificationRequest;
+import com.example.classification_service.model.Clasificacion;
+import com.example.classification_service.repository.ClasificacionRepository;
+import com.example.classification_service.service.ClassificationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

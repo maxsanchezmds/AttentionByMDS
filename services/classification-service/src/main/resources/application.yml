@@ -32,7 +32,7 @@ openai:
 # Configuración de logging
 logging:
   level:
-    com.attention.analysis.Classification_Service: INFO
+    com.example.classification_service: INFO
     org.springframework.web: WARN
     org.springframework.web.reactive.function.client: DEBUG
     org.hibernate.SQL: WARN

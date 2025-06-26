@@ -6,15 +6,17 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import com.attention.analysis.api_gateway.service.JwtService;
+import org.springframework.context.annotation.Import;
 
 @WebFluxTest(controllers = HealthController.class)
+@Import(com.attention.analysis.api_gateway.config.SecurityConfig.class)
 class HealthControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @MockBean
-    private JwtService jwtService; // Needed to satisfy context
+    private JwtService jwtService;
 
     @Test
     void healthEndpoint_returnsUp() {

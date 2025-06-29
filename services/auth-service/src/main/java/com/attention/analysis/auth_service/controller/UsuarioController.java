@@ -5,6 +5,8 @@ import com.attention.analysis.auth_service.model.Usuario;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +19,7 @@ import java.util.Map;
 public class UsuarioController {
 
     @GetMapping("/perfil")
-    public ResponseEntity<Map<String, Object>> obtenerPerfilUsuario(
+    public ResponseEntity<EntityModel<Map<String, Object>>> obtenerPerfilUsuario(
             @AuthenticationPrincipal Usuario usuario
     ) {
         Map<String, Object> perfil = new HashMap<>();
@@ -40,8 +42,16 @@ public class UsuarioController {
             empresa.put("telefonoWhatsapp", usuario.getEmpresa().getTelefonoWhatsapp());
             perfil.put("empresa", empresa);
         }
-        
-        return ResponseEntity.ok(perfil);
+
+        EntityModel<Map<String, Object>> resource = EntityModel.of(perfil,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class)
+                        .obtenerPerfilUsuario(null)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class)
+                        .soloParaAdmins()).withRel("admin"),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UsuarioController.class)
+                        .soloParaEjecutivos()).withRel("ejecutivo"));
+
+        return ResponseEntity.ok(resource);
     }
 
     @GetMapping("/admin")

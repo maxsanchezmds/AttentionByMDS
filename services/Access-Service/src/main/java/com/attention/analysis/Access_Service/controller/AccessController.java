@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 @RestController
 @RequestMapping("/api/access")
@@ -17,12 +19,19 @@ public class AccessController {
     public AccessController(AccessService accessService) {
         this.accessService = accessService;
     }
-    
+    private EntityModel<Acceso> toModel(Acceso acceso) {
+        return EntityModel.of(acceso,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AccessController.class)
+                        .obtenerAccesosPorEmpresa(acceso.getIdEmpresa())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AccessController.class)
+                        .actualizarAccesos(acceso.getIdEmpresa(), acceso)).withRel("update"));
+    }
+
     @PostMapping("/check")
     public ResponseEntity<?> checkAccess(@Valid @RequestBody AccessRequest request) {
         try {
             Acceso acceso = accessService.procesarAcceso(request);
-            return ResponseEntity.ok(acceso);
+            return ResponseEntity.ok(toModel(acceso));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error: " + e.getMessage());
@@ -43,7 +52,7 @@ public class AccessController {
             
             // Guardar los nuevos accesos
             Acceso accesoGuardado = accessService.crearAccesos(acceso);
-            return ResponseEntity.ok(accesoGuardado);
+            return ResponseEntity.ok(toModel(accesoGuardado));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al crear los accesos: " + e.getMessage());
@@ -53,7 +62,7 @@ public class AccessController {
     @GetMapping("/empresa/{idEmpresa}")
     public ResponseEntity<?> obtenerAccesosPorEmpresa(@PathVariable Long idEmpresa) {
         return accessService.obtenerAccesosPorEmpresa(idEmpresa)
-                .map(ResponseEntity::ok)
+                .map(acc -> ResponseEntity.ok(toModel(acc)))
                 .orElse(ResponseEntity.notFound().build());
     }
     
@@ -62,7 +71,7 @@ public class AccessController {
                                               @RequestBody Acceso acceso) {
         try {
             Acceso accesoActualizado = accessService.actualizarAccesos(idEmpresa, acceso);
-            return ResponseEntity.ok(accesoActualizado);
+            return ResponseEntity.ok(toModel(accesoActualizado));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: " + e.getMessage());

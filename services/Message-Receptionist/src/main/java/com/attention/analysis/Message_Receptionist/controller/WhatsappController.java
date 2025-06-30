@@ -4,6 +4,9 @@ import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
 import com.attention.analysis.Message_Receptionist.dto.EjecutivoMensajeRequest;
 import com.attention.analysis.Message_Receptionist.service.MensajeService;
 import com.attention.analysis.Message_Receptionist.model.Mensaje;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +47,22 @@ public class WhatsappController {
     }
 
     @GetMapping("/conversacion/{idConversacion}/mensajes")
-    public ResponseEntity<?> obtenerMensajesConversacion(@PathVariable Long idConversacion) {
+    public ResponseEntity<CollectionModel<EntityModel<Mensaje>>> obtenerMensajesConversacion(@PathVariable Long idConversacion) {
         List<Mensaje> mensajes = mensajeService.obtenerMensajesPorConversacion(idConversacion);
         if (mensajes.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(mensajes);
+
+        List<EntityModel<Mensaje>> mensajeResources = mensajes.stream()
+                .map(mensaje -> EntityModel.of(mensaje,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WhatsappController.class)
+                                .obtenerMensajesConversacion(idConversacion)).withSelfRel()))
+                .toList();
+
+        CollectionModel<EntityModel<Mensaje>> collection = CollectionModel.of(mensajeResources,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(WhatsappController.class)
+                        .obtenerMensajesConversacion(idConversacion)).withSelfRel());
+
+        return ResponseEntity.ok(collection);
     }
 }

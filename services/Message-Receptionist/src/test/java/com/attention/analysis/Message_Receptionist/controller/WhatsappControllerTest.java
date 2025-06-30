@@ -74,7 +74,8 @@ class WhatsappControllerTest {
         when(mensajeService.obtenerMensajesPorConversacion(1L)).thenReturn(List.of(msg));
         mockMvc.perform(get("/webhook/conversacion/1/mensajes"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].mensaje").value("hola"));
+                .andExpect(jsonPath("$._embedded.*[0].mensaje").value("hola"))
+                .andExpect(jsonPath("$._links.self.href").exists());
     }
 
     @Test

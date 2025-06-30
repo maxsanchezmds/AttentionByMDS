@@ -42,3 +42,9 @@ logging:
   level:
     com.attention.analysis.Message_Receptionist: DEBUG
     org.springframework.web: INFO
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

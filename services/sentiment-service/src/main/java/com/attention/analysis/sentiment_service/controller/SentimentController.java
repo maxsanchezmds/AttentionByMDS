@@ -4,7 +4,6 @@ import com.attention.analysis.sentiment_service.dto.MensajeDTO;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
 import com.attention.analysis.sentiment_service.model.Sentiment;
 import com.attention.analysis.sentiment_service.model.AvgSentiment;
-import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;
 import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
 import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
@@ -12,6 +11,9 @@ import com.attention.analysis.sentiment_service.service.SentimentService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,18 @@ public class SentimentController {
         this.sentimentRepository = sentimentRepository;
         this.avgSentimentRepository = avgSentimentRepository;
     }
-    
+
+    private EntityModel<AvgSentiment> toModel(AvgSentiment avg) {
+        return EntityModel.of(avg,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(SentimentController.class)
+                        .obtenerAnalisisPorConversacion(avg.getIdConversacion())).withSelfRel());
+    }
+
+    private EntityModel<Sentiment> toModel(Sentiment sentiment) {
+        return EntityModel.of(sentiment,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(SentimentController.class)
+                        .obtenerAnalisisPorConversacion(sentiment.getIdConversacion())).withRel("conversacion"));
+    }
     /**
      * ENDPOINT PRINCIPAL: Recibe el mismo JSON que access-service envía a classification-service
      */
@@ -92,7 +105,7 @@ public class SentimentController {
             if (avgSentiment.isPresent()) {
                 return ResponseEntity.ok(Map.of(
                     "tipo", "promedio",
-                    "data", avgSentiment.get()
+                    "data", toModel(avgSentiment.get())
                 ));
             } else {
                 // Buscar análisis individuales
@@ -100,9 +113,15 @@ public class SentimentController {
                     idConversacion, PageRequest.of(0, 10));
                     
                 if (!sentimientos.isEmpty()) {
+                    List<EntityModel<Sentiment>> models = sentimientos.stream()
+                            .map(this::toModel)
+                            .toList();
+                    CollectionModel<EntityModel<Sentiment>> collection = CollectionModel.of(models,
+                            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(SentimentController.class)
+                                    .obtenerAnalisisPorConversacion(idConversacion)).withSelfRel());
                     return ResponseEntity.ok(Map.of(
                         "tipo", "individual",
-                        "data", sentimientos
+                        "data", collection
                     ));
                 } else {
                     return ResponseEntity.notFound().build();

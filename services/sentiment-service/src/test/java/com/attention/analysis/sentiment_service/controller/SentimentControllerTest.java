@@ -68,7 +68,8 @@ class SentimentControllerTest {
         mockMvc.perform(get("/api/sentiment/analisis/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo").value("promedio"))
-                .andExpect(jsonPath("$.data.promedioSentimiento").value(80.0));
+                .andExpect(jsonPath("$.data.promedioSentimiento").value(80.0))
+                .andExpect(jsonPath("$.data._links.self.href").exists());
     }
 
     @Test
@@ -81,6 +82,7 @@ class SentimentControllerTest {
         mockMvc.perform(get("/api/sentiment/analisis/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo").value("individual"))
-                .andExpect(jsonPath("$.data[0].sentimiento").value(70));
+                .andExpect(jsonPath("$.data._embedded.*[0].sentimiento").value(70))
+                .andExpect(jsonPath("$.data._embedded.*[0]._links.conversacion.href").exists());
     }
 }

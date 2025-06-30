@@ -32,11 +32,16 @@ openai:
     key: ${OPENAI_API_KEY:your-openai-api-key-here}
   model: ${OPENAI_MODEL:gpt-3.5-turbo}
 
-# Configuración de logging
-logging:
-  level:
-    com.attention.analysis.sentiment_service: INFO
-    org.springframework.web: WARN
-    org.springframework.web.reactive.function.client: DEBUG
-    org.hibernate.SQL: WARN
-    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+  logging:
+    level:
+      com.attention.analysis.sentiment_service: INFO
+      org.springframework.web: WARN
+      org.springframework.web.reactive.function.client: DEBUG
+      org.hibernate.SQL: WARN
+      org.hibernate.type.descriptor.sql.BasicBinder: WARN
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

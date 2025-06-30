@@ -7,6 +7,8 @@ import com.example.classification_service.service.ClassificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
@@ -26,14 +28,21 @@ public class ClassificationController {
         this.classificationService = classificationService;
         this.clasificacionRepository = clasificacionRepository;
     }
-    
+
+    private EntityModel<Clasificacion> toModel(Clasificacion clasificacion) {
+        return EntityModel.of(clasificacion,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ClassificationController.class)
+                        .obtenerClasificacionActual(clasificacion.getIdConversacion())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ClassificationController.class)
+                        .obtenerHistorialClasificaciones(clasificacion.getIdConversacion())).withRel("historial"));
+    }
     @PostMapping("/classify")
     public ResponseEntity<?> clasificarConversacion(@Valid @RequestBody ClassificationRequest request) {
         try {
             Clasificacion clasificacion = classificationService.procesarClasificacion(request);
             
             Map<String, Object> response = new HashMap<>();
-            response.put("clasificacion", clasificacion);
+            response.put("clasificacion", toModel(clasificacion));
             response.put("mensaje", "Clasificación procesada exitosamente");
             response.put("reclasificacion", clasificacionRepository.countByIdConversacion(request.getIdConversacion()) > 1);
             
@@ -51,7 +60,7 @@ public class ClassificationController {
     public ResponseEntity<?> obtenerClasificacionActual(@PathVariable Long idConversacion) {
         try {
             Clasificacion clasificacion = classificationService.obtenerClasificacion(idConversacion);
-            return ResponseEntity.ok(clasificacion);
+            return ResponseEntity.ok(toModel(clasificacion));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", e.getMessage()));

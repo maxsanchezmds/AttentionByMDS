@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/controller/UsuarioController.java
 package com.attention.analysis.auth_service.controller;
 
 import com.attention.analysis.auth_service.model.Usuario;

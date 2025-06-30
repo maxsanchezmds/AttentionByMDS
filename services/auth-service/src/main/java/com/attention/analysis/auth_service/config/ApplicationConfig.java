@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/config/ApplicationConfig.java
 package com.attention.analysis.auth_service.config;
 
 import com.attention.analysis.auth_service.repository.UsuarioRepository;

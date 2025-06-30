@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/dto/RegistroEjecutivoDTO.java
 package com.attention.analysis.auth_service.dto;
 
 import jakarta.validation.constraints.Email;

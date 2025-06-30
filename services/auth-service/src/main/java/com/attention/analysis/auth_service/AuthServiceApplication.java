@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/AuthServiceApplication.java
 package com.attention.analysis.auth_service;
 
 import org.springframework.boot.SpringApplication;

@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/dto/EmpresaWhatsappDTO.java
 package com.attention.analysis.auth_service.dto;
 
 import lombok.AllArgsConstructor;

@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/repository/UsuarioRepository.java
 package com.attention.analysis.auth_service.repository;
 
 import com.attention.analysis.auth_service.model.Usuario;

@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/model/Usuario.java
 package com.attention.analysis.auth_service.model;
 
 import jakarta.persistence.*;

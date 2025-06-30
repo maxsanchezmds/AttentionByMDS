@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/security/JwtService.java
 package com.attention.analysis.auth_service.security;
 
 import io.jsonwebtoken.Claims;

@@ -1,4 +1,3 @@
-// src/main/java/com/attention/analysis/auth_service/exception/GlobalExceptionHandler.java
 package com.attention.analysis.auth_service.exception;
 
 import org.springframework.http.HttpStatus;

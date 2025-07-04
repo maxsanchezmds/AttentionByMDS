@@ -2,6 +2,7 @@ package com.attention.analysis.sentiment_service;
 
 import com.attention.analysis.sentiment_service.dto.MensajeDTO;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
+import com.attention.analysis.sentiment_service.dto.TwilioMessage;
 import com.attention.analysis.sentiment_service.dto.WhatsappMessage;
 import com.attention.analysis.sentiment_service.model.Sentiment;
 import com.attention.analysis.sentiment_service.model.AvgSentiment;
@@ -42,22 +43,12 @@ class SentimentServiceTest {
     @InjectMocks
     private SentimentService sentimentService;
 
-    private WhatsappMessage buildWhatsappMessage(String text) {
-        WhatsappMessage.Message msg = new WhatsappMessage.Message();
-        msg.setTimestamp("1700000000");
-        WhatsappMessage.Text txt = new WhatsappMessage.Text();
-        txt.setBody(text);
-        msg.setText(txt);
-
-        WhatsappMessage.Metadata metadata = new WhatsappMessage.Metadata();
-        metadata.setDisplay_phone_number("12345");
-
-        WhatsappMessage.Value value = new WhatsappMessage.Value();
-        value.setMetadata(metadata);
-        value.setMessages(List.of(msg));
-
-        WhatsappMessage whatsappMessage = new WhatsappMessage();
-        whatsappMessage.setValue(value);
+    private TwilioMessage buildWhatsappMessage(String text) {
+        TwilioMessage whatsappMessage = new TwilioMessage();
+        whatsappMessage.setTo("whatsapp:+12345");
+        whatsappMessage.setBody(text);
+        whatsappMessage.setFrom("whatsapp:+11111");
+        whatsappMessage.setMessageSid("sid");
         return whatsappMessage;
     }
 
@@ -101,7 +92,7 @@ class SentimentServiceTest {
 
         SentimentRequest request = new SentimentRequest();
         request.setIdConversacion(1L);
-        request.setWhatsappMessage(new WhatsappMessage());
+        request.setWhatsappMessage(new TwilioMessage());
 
         assertThrows(IllegalArgumentException.class, () -> sentimentService.procesarSentimiento(request));
     }

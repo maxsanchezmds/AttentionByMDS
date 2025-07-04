@@ -3,6 +3,8 @@ package com.attention.analysis.sentiment_service.dto;
 import lombok.Data;
 import jakarta.validation.constraints.NotNull;
 
+
+import com.attention.analysis.sentiment_service.dto.TwilioMessage;
 @Data
 public class SentimentRequest {
     
@@ -10,5 +12,5 @@ public class SentimentRequest {
     private Long idConversacion;
     
     @NotNull(message = "El mensaje de WhatsApp es requerido")
-    private WhatsappMessage whatsappMessage;
+    private TwilioMessage whatsappMessage;
 }

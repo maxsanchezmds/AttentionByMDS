@@ -6,7 +6,7 @@
   "SmsSid": "SMxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "WaId": "56912345678",
   "SmsStatus": "received",
-  "Body": "Hola",
+  "Body": "Hola, este es un mensaje de prueba",
   "To": "whatsapp:+17625576132",
   "MessagingServiceSid": "MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "NumSegments": "1",

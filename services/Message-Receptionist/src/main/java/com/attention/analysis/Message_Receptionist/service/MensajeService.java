@@ -1,6 +1,7 @@
 package com.attention.analysis.Message_Receptionist.service;
 
 import com.attention.analysis.Message_Receptionist.dto.Empresa;
+import com.attention.analysis.Message_Receptionist.dto.TwilioMessage;
 import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
 import com.attention.analysis.Message_Receptionist.dto.EjecutivoMensajeRequest;
 import com.attention.analysis.Message_Receptionist.model.Conversacion;
@@ -39,65 +40,30 @@ public class MensajeService {
     }
 
     @Transactional
-    public boolean procesarMensaje(WhatsappMessage whatsappMessage) {
+    public boolean procesarMensaje(TwilioMessage whatsappMessage) {
         try {
             // Obtener el display_phone_number del mensaje
-            String displayPhoneNumber = whatsappMessage.getValue().getMetadata().getDisplay_phone_number();
+            String numeroDestinatario = limpiarPrefijo(whatsappMessage.getTo());
             
             // Validar si el número pertenece a una empresa registrada
-            Optional<Empresa> empresaOpt = empresaService.validarNumeroEmpresa(displayPhoneNumber);
+            Optional<Empresa> empresaOpt = empresaService.validarNumeroEmpresa(numeroDestinatario);
             
             if (empresaOpt.isEmpty()) {
-                logger.warn("Mensaje recibido de un número no registrado: {}", displayPhoneNumber);
+                logger.warn("Mensaje recibido de un número no registrado: {}", numeroDestinatario);
                 return false;
             }
             
             Empresa empresa = empresaOpt.get();
-            // Continuar con el procesamiento del mensaje...
-            
-            if (whatsappMessage.getValue() == null || 
-                whatsappMessage.getValue().getMessages() == null || 
-                whatsappMessage.getValue().getMessages().isEmpty()) {
-                return false;
-            }
 
-            WhatsappMessage.Message mensajeWA = whatsappMessage.getValue().getMessages().get(0);
-            String numeroTelefono = mensajeWA.getFrom();
-            String contenidoMensaje = mensajeWA.getText() != null ? mensajeWA.getText().getBody() : "";
-            String idMensaje = mensajeWA.getId();
-            
-            String numeroDestinatario = whatsappMessage.getValue().getMetadata().getPhone_number_id();
-            
-            // Validar que el mensaje tenga como destino una empresa registrada
-            Optional<Empresa> empresaOpt2 = empresaService.validarNumeroEmpresa(numeroDestinatario);
-            
-            if (empresaOpt2.isEmpty()) {
-                logger.warn("Mensaje descartado: no corresponde a una empresa registrada");
-                return false; // Importante: retornar false para indicar que el mensaje no se procesó
-            }
-            
-            Empresa empresa2 = empresaOpt2.get();
-            
-            // Timestamp del mensaje. Intentamos convertir el valor proporcionado
-            // por WhatsApp; si no existe o falla la conversión, usamos la hora
-            // actual para evitar almacenar valores incorrectos.
-            LocalDateTime fechaMensaje;
-            try {
-                String ts = mensajeWA.getTimestamp();
-                if (ts != null && !ts.isEmpty()) {
-                    fechaMensaje = LocalDateTime.ofInstant(
-                        Instant.ofEpochSecond(Long.parseLong(ts)),
-                        ZoneId.systemDefault()
-                    );
-                } else {
-                    fechaMensaje = LocalDateTime.now();
-                }
-            } catch (Exception e) {
-                fechaMensaje = LocalDateTime.now();
-            }
+            String numeroTelefono = limpiarPrefijo(whatsappMessage.getFrom());
+            String contenidoMensaje = whatsappMessage.getBody() != null ? whatsappMessage.getBody() : "";
+            String idMensaje = whatsappMessage.getMessageSid();
+
+            // Timestamp del mensaje - Twilio no envía, usar momento actual
+            LocalDateTime fechaMensaje = LocalDateTime.now();
             
             // Buscar o crear conversación
-            Conversacion conversacion = obtenerOCrearConversacion(numeroTelefono, empresa2, fechaMensaje);
+            Conversacion conversacion = obtenerOCrearConversacion(numeroTelefono, empresa, fechaMensaje);
             
             // Actualizar fecha de actualización de la conversación
             conversacion.setFechaActualizacion(fechaMensaje);
@@ -203,5 +169,10 @@ public class MensajeService {
 
     public List<Mensaje> obtenerMensajesPorConversacion(Long idConversacion) {
         return mensajeRepository.findByConversacionIdOrderByFechaAsc(idConversacion);
+    }
+
+    private String limpiarPrefijo(String numero) {
+        if (numero == null) return null;
+        return numero.replace("whatsapp:", "").replace("+", "");
     }
 }

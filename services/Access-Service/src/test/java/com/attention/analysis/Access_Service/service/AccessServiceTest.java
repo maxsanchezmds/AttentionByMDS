@@ -2,6 +2,7 @@ package com.attention.analysis.Access_Service.service;
 
 import com.attention.analysis.Access_Service.dto.AccessRequest;
 import com.attention.analysis.Access_Service.dto.Empresa;
+import com.attention.analysis.Access_Service.dto.TwilioMessage;
 import com.attention.analysis.Access_Service.dto.WhatsappMessage;
 import com.attention.analysis.Access_Service.model.Acceso;
 import com.attention.analysis.Access_Service.repository.AccesoRepository;
@@ -33,12 +34,8 @@ class AccessServiceTest {
     private AccessService accessService;
 
     private AccessRequest buildRequest() {
-        WhatsappMessage.Metadata metadata = new WhatsappMessage.Metadata();
-        metadata.setDisplay_phone_number("12345");
-        WhatsappMessage.Value value = new WhatsappMessage.Value();
-        value.setMetadata(metadata);
-        WhatsappMessage whatsappMessage = new WhatsappMessage();
-        whatsappMessage.setValue(value);
+        TwilioMessage whatsappMessage = new TwilioMessage();
+        whatsappMessage.setTo("whatsapp:+12345");
 
         AccessRequest req = new AccessRequest();
         req.setIdConversacion(1L);
@@ -92,8 +89,7 @@ class AccessServiceTest {
     @Test
     void procesarAcceso_mensajeInvalido_lanzaExcepcion() {
         AccessRequest req = new AccessRequest();
-        WhatsappMessage msg = new WhatsappMessage();
-        msg.setValue(new WhatsappMessage.Value());
+        TwilioMessage msg = new TwilioMessage();
         req.setWhatsappMessage(msg);
         req.setIdConversacion(1L);
 

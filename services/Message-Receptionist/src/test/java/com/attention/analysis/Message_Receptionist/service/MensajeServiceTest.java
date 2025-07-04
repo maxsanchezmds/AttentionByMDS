@@ -2,6 +2,7 @@ package com.attention.analysis.Message_Receptionist.service;
 
 import com.attention.analysis.Message_Receptionist.dto.Empresa;
 import com.attention.analysis.Message_Receptionist.dto.EjecutivoMensajeRequest;
+import com.attention.analysis.Message_Receptionist.dto.TwilioMessage;
 import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
 import com.attention.analysis.Message_Receptionist.model.Conversacion;
 import com.attention.analysis.Message_Receptionist.model.Mensaje;
@@ -35,23 +36,13 @@ class MensajeServiceTest {
     @InjectMocks
     private MensajeService mensajeService;
 
-    private WhatsappMessage crearMensaje() {
-        WhatsappMessage whatsappMessage = new WhatsappMessage();
-        WhatsappMessage.Value value = new WhatsappMessage.Value();
-        WhatsappMessage.Metadata metadata = new WhatsappMessage.Metadata();
-        metadata.setDisplay_phone_number("12345678");
-        metadata.setPhone_number_id("87654321");
-        value.setMetadata(metadata);
-
-        WhatsappMessage.Message msg = new WhatsappMessage.Message();
-        msg.setFrom("11111");
-        msg.setId("id");
-        msg.setTimestamp("111");
-        WhatsappMessage.Text text = new WhatsappMessage.Text();
-        text.setBody("Hola");
-        msg.setText(text);
-        value.setMessages(List.of(msg));
-        whatsappMessage.setValue(value);
+    private TwilioMessage crearMensaje() {
+        TwilioMessage whatsappMessage = new TwilioMessage();
+        whatsappMessage.setTo("whatsapp:+87654321");
+        whatsappMessage.setFrom("whatsapp:+11111");
+        whatsappMessage.setBody("Hola");
+        whatsappMessage.setMessageSid("id");
+        whatsappMessage.setWaId("11111");
         return whatsappMessage;
     }
 
@@ -79,7 +70,7 @@ class MensajeServiceTest {
             return c;
         });
 
-        WhatsappMessage msg = crearMensaje();
+        TwilioMessage msg = crearMensaje();
 
         boolean result = mensajeService.procesarMensaje(msg);
 

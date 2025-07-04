@@ -1,6 +1,6 @@
 package com.attention.analysis.Message_Receptionist.controller;
 
-import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
+import com.attention.analysis.Message_Receptionist.dto.TwilioMessage;
 import com.attention.analysis.Message_Receptionist.dto.EjecutivoMensajeRequest;
 import com.attention.analysis.Message_Receptionist.service.MensajeService;
 import com.attention.analysis.Message_Receptionist.model.Mensaje;
@@ -25,7 +25,7 @@ public class WhatsappController {
     }
 
     @PostMapping
-    public ResponseEntity<String> recibirMensaje(@RequestBody WhatsappMessage whatsappMessage) {
+    public ResponseEntity<String> recibirMensaje(@RequestBody TwilioMessage whatsappMessage) {
         boolean procesado = mensajeService.procesarMensaje(whatsappMessage);
         
         if (procesado) {

@@ -2,6 +2,7 @@ package com.attention.analysis.sentiment_service.service;
 
 import com.attention.analysis.sentiment_service.dto.MensajeDTO;
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
+import com.attention.analysis.sentiment_service.dto.TwilioMessage;
 import com.attention.analysis.sentiment_service.dto.WhatsappMessage;
 import com.attention.analysis.sentiment_service.dto.Empresa;
 import com.attention.analysis.sentiment_service.model.Sentiment;
@@ -42,36 +43,20 @@ public class SentimentService {
         Long idConversacion = request.getIdConversacion();
         logger.info("Procesando análisis de sentimiento para conversación ID: {}", idConversacion);
         
-        WhatsappMessage whatsappMessage = request.getWhatsappMessage();
+        TwilioMessage whatsappMessage = request.getWhatsappMessage();
 
-        if (whatsappMessage.getValue() == null ||
-            whatsappMessage.getValue().getMessages() == null ||
-            whatsappMessage.getValue().getMessages().isEmpty()) {
+        if (whatsappMessage.getBody() == null) {
             throw new IllegalArgumentException("Estructura de mensaje WhatsApp inválida");
         }
-        String displayPhoneNumber = whatsappMessage.getValue().getMetadata().getDisplay_phone_number();
+        String displayPhoneNumber = limpiarPrefijo(whatsappMessage.getTo());
         Long idEmpresa = empresaService
                 .validarNumeroEmpresa(displayPhoneNumber)
                 .map(Empresa::getId)
                 .orElse(null);
 
-        WhatsappMessage.Message message = whatsappMessage.getValue().getMessages().get(0);
-        String texto = message.getText() != null ? message.getText().getBody() : "";
+        String texto = whatsappMessage.getBody();
 
-        java.time.LocalDateTime fecha;
-        String ts = message.getTimestamp();
-        try {
-            long epoch = Long.parseLong(ts);
-            if (ts.length() > 10) {
-                epoch /= 1000; // timestamp in milliseconds
-            }
-            fecha = java.time.LocalDateTime.ofInstant(
-                    java.time.Instant.ofEpochSecond(epoch),
-                    java.time.ZoneId.systemDefault());
-        } catch (Exception e) {
-            logger.warn("Timestamp inválido '{}' - se usará el momento actual", ts);
-            fecha = java.time.LocalDateTime.now();
-        }
+        java.time.LocalDateTime fecha = java.time.LocalDateTime.now();
 
         logger.info("Analizando sentimiento del mensaje recibido: {} caracteres", texto.length());
 
@@ -128,7 +113,7 @@ public class SentimentService {
     // Método para análisis individual de mensajes (compatibilidad)
     @Transactional
     public void analizarMensaje(MensajeDTO mensajeDTO) {
-        logger.info("Analizando mensaje individual para conversación: {}", 
+        logger.info("Analizando mensaje individual para conversación: {}",
                    mensajeDTO.getConversacion().getId());
         
         Integer valorSentimiento = openAIService.analizarSentimiento(mensajeDTO.getMensaje());
@@ -141,6 +126,9 @@ public class SentimentService {
         sentiment.setFechaEnvio(mensajeDTO.getFecha());
         
         sentimentRepository.save(sentiment);
-        logger.info("Análisis de sentimiento individual guardado: valor={}", valorSentimiento);
+        private String limpiarPrefijo(String numero) {
+            if (numero == null) return null;
+            return numero.replace("whatsapp:", "").replace("+", "");
+        }
     }
 }

@@ -2,7 +2,7 @@ package com.attention.analysis.Access_Service.service;
 
 import com.attention.analysis.Access_Service.dto.AccessRequest;
 import com.attention.analysis.Access_Service.dto.Empresa;
-import com.attention.analysis.Access_Service.dto.WhatsappMessage;
+import com.attention.analysis.Access_Service.dto.TwilioMessage;
 import com.attention.analysis.Access_Service.model.Acceso;
 import com.attention.analysis.Access_Service.repository.AccesoRepository;
 import org.slf4j.Logger;
@@ -37,15 +37,14 @@ public class AccessService {
         logger.info("Procesando acceso para conversación ID: {}", request.getIdConversacion());
         
         // Validar que el mensaje tenga la estructura correcta
-        WhatsappMessage whatsappMessage = request.getWhatsappMessage();
-        if (whatsappMessage.getValue() == null || 
-            whatsappMessage.getValue().getMetadata() == null) {
+        TwilioMessage whatsappMessage = request.getWhatsappMessage();
+        if (whatsappMessage.getTo() == null) {
             logger.error("Estructura de mensaje WhatsApp inválida");
             throw new IllegalArgumentException("Estructura de mensaje WhatsApp inválida");
         }
         
         // Obtener el número de teléfono de la empresa del mensaje
-        String displayPhoneNumber = whatsappMessage.getValue().getMetadata().getDisplay_phone_number();
+        String displayPhoneNumber = limpiarPrefijo(whatsappMessage.getTo());
         
         // Validar que el número pertenezca a una empresa registrada
         Optional<Empresa> empresaOpt = empresaService.validarNumeroEmpresa(displayPhoneNumber);
@@ -122,5 +121,10 @@ public class AccessService {
         acceso.setLearnAccess(accesosActualizados.getLearnAccess());
         
         return accesoRepository.save(acceso);
+    }
+
+    private String limpiarPrefijo(String numero) {
+        if (numero == null) return null;
+        return numero.replace("whatsapp:", "").replace("+", "");
     }
 }

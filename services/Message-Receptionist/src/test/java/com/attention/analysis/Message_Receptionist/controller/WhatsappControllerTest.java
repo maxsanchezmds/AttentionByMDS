@@ -1,6 +1,7 @@
 package com.attention.analysis.Message_Receptionist.controller;
 
 import com.attention.analysis.Message_Receptionist.dto.EjecutivoMensajeRequest;
+import com.attention.analysis.Message_Receptionist.dto.TwilioMessage;
 import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
 import com.attention.analysis.Message_Receptionist.model.Mensaje;
 import com.attention.analysis.Message_Receptionist.service.MensajeService;
@@ -31,7 +32,7 @@ class WhatsappControllerTest {
 
     @Test
     void recibirMensaje_ok() throws Exception {
-        when(mensajeService.procesarMensaje(any(WhatsappMessage.class))).thenReturn(true);
+        when(mensajeService.procesarMensaje(any(TwilioMessage.class))).thenReturn(true);
         mockMvc.perform(post("/webhook")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
@@ -41,7 +42,7 @@ class WhatsappControllerTest {
 
     @Test
     void recibirMensaje_falla() throws Exception {
-        when(mensajeService.procesarMensaje(any(WhatsappMessage.class))).thenReturn(false);
+        when(mensajeService.procesarMensaje(any(TwilioMessage.class))).thenReturn(false);
         mockMvc.perform(post("/webhook")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))

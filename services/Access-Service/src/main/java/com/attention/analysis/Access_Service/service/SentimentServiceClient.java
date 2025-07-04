@@ -1,6 +1,6 @@
 package com.attention.analysis.Access_Service.service;
 
-import com.attention.analysis.Access_Service.dto.WhatsappMessage;
+import com.attention.analysis.Access_Service.dto.TwilioMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class SentimentServiceClient {
         logger.info("Sentiment Service URL configurado: {}", sentimentServiceUrl);
     }
     
-    public void solicitarAnalisisSentimiento(Long idConversacion, WhatsappMessage whatsappMessage) {
+    public void solicitarAnalisisSentimiento(Long idConversacion, TwilioMessage whatsappMessage) {
         try {
             Map<String, Object> request = new HashMap<>();
             request.put("idConversacion", idConversacion);

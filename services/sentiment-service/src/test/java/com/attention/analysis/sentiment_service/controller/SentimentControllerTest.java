@@ -1,7 +1,7 @@
 package com.attention.analysis.sentiment_service.controller;
 
 import com.attention.analysis.sentiment_service.dto.SentimentRequest;
-import com.attention.analysis.sentiment_service.dto.WhatsappMessage;
+import com.attention.analysis.sentiment_service.dto.TwilioMessage;
 import com.attention.analysis.sentiment_service.model.Sentiment;
 import com.attention.analysis.sentiment_service.model.AvgSentiment;
 import com.attention.analysis.sentiment_service.repository.SentimentRepository;

@@ -1,6 +1,6 @@
 package com.attention.analysis.Message_Receptionist.service;
 
-import com.attention.analysis.Message_Receptionist.dto.WhatsappMessage;
+import com.attention.analysis.Message_Receptionist.dto.TwilioMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ public class AccessServiceClient {
         logger.info("Access Service URL configurado: {}", accessServiceUrl);
     }
     
-    public void notificarAcceso(Long idConversacion, WhatsappMessage whatsappMessage) {
+    public void notificarAcceso(Long idConversacion, TwilioMessage whatsappMessage) {
         try {
             Map<String, Object> request = new HashMap<>();
             request.put("idConversacion", idConversacion);

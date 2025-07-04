@@ -29,18 +29,13 @@ io.on('connection', socket => {
 app.post('/wsp', (req, res) => {
   const body = req.body;
 
-  const messages = body?.value?.messages;
-  const waId = body?.value?.contacts?.[0]?.wa_id;
-
-  if (Array.isArray(messages) && messages.length > 0) {
-    const msg = messages[0];
-    const payload = {
-      from: waId,
-      text: msg.text?.body || '',
-      timestamp: msg.timestamp
-    };
-    io.to(waId).emit('message', payload);
-  }
+  const waId = body.WaId || (body.From || '').replace('whatsapp:', '');
+  const payload = {
+    from: waId,
+    text: body.Body || '',
+    timestamp: Date.now().toString()
+  };
+  io.to(waId).emit('message', payload);
 
   res.status(200).json({ status: 'received' });
 });

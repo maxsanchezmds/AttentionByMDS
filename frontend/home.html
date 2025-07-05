@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attention MDS Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-placeholder {
+            width: 120px;
+            height: 32px;
+            background: #f1f5f9;
+            border: 2px dashed #d1d5db;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 40px 8px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            background: #f9fafb;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            width: 16px;
+            height: 16px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>') no-repeat center;
+            background-size: contain;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #1e293b;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            padding-top: 60px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 12px 24px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .menu-item.active {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-left-color: #06b6d4;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding-top: 60px;
+            background: #f5f7fa;
+        }
+
+        .dashboard-header {
+            padding: 30px 30px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.5px;
+        }
+
+        .download-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background: #059669;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 0 30px 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .stat-icon.urgent {
+            background: #ef4444;
+        }
+
+        .stat-icon.moderate {
+            background: #f59e0b;
+        }
+
+        .stat-icon.light {
+            background: #06b6d4;
+        }
+
+        .stat-icon.percentage {
+            background: #8b5cf6;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .stat-users {
+            font-size: 13px;
+            color: #06b6d4;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 0 30px 30px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .chart-menu {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .chart-canvas-container {
+            position: relative;
+            height: 280px;
+        }
+
+        .sentiment-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .legend-color.neutro {
+            background: #10b981;
+        }
+
+        .legend-color.feliz {
+            background: #22c55e;
+        }
+
+        .legend-color.enojado {
+            background: #16a34a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-placeholder">Logo aquí</div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Buscar conversacion">
+                <div class="search-icon"></div>
+            </div>
+            
+            <div class="user-profile">
+                <span class="user-name">Maximiliano David<br>Sanchez</span>
+                <div class="user-avatar">MS</div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item active">Dashboard</a>
+                <a href="#" class="menu-item">Documentación<br>Attention MDS</a>
+                <a href="#" class="menu-item">Análisis de<br>conversaciones</a>
+                <a href="#" class="menu-item">Fortalezas y<br>Debilidades en la<br>atención.</a>
+                <a href="#" class="menu-item">Mi Consumo</a>
+                <a href="#" class="menu-item">Documentación<br>Attention MDS</a>
+                <a href="#" class="menu-item">Cerrar Sesion</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">DASHBOARD</h1>
+                <button class="download-btn">Descargar Reporte</button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon urgent"></div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Prioridad<br>Urgente</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon moderate"></div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">Prioridad<br>Moderada</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon light"></div>
+                    <div class="stat-value">71</div>
+                    <div class="stat-label">Prioridad<br>Leve</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">93%</div>
+                    <div class="stat-label">Porcentaje de<br>Usuarios Contestados</div>
+                    <div class="stat-users">1,247 usuarios activos</div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Calidad de la atención<br>brindada a clientes (Año)</h3>
+                        <button class="chart-menu">☰</button>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="areaChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Análisis de Sentimientos de<br>los Usuarios (Mes)</h3>
+                        <button class="chart-menu">☰</button>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="doughnutChart"></canvas>
+                    </div>
+                    <div class="sentiment-legend">
+                        <div class="legend-item">
+                            <div class="legend-color neutro"></div>
+                            <span>Neutro</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color feliz"></div>
+                            <span>Feliz</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color enojado"></div>
+                            <span>Enojado</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Area Chart
+        const areaCtx = document.getElementById('areaChart').getContext('2d');
+        new Chart(areaCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                datasets: [{
+                    data: [3, 4, 6, 8, 4, 6, 7, 6, 8, 7, 9, 10],
+                    backgroundColor: 'rgba(6, 182, 212, 0.3)',
+                    borderColor: '#06b6d4',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        ticks: {
+                            stepSize: 2
+                        },
+                        grid: {
+                            color: '#f1f5f9'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Doughnut Chart
+        const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Neutro', 'Feliz', 'Enojado'],
+                datasets: [{
+                    data: [70, 25, 5],
+                    backgroundColor: [
+                        '#10b981',
+                        '#22c55e',
+                        '#16a34a'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

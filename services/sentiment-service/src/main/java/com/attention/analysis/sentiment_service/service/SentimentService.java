@@ -126,9 +126,10 @@ public class SentimentService {
         sentiment.setFechaEnvio(mensajeDTO.getFecha());
         
         sentimentRepository.save(sentiment);
-        private String limpiarPrefijo(String numero) {
-            if (numero == null) return null;
-            return numero.replace("whatsapp:", "").replace("+", "");
-        }
+    }
+
+    private String limpiarPrefijo(String numero) {
+        if (numero == null) return null;
+        return numero.replace("whatsapp:", "").replace("+", "");
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -53,6 +55,8 @@ public class MessageReceptionistClient {
             }
 
             ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             JsonNode root = mapper.readTree(respuesta);
             JsonNode embedded = root.path("_embedded");
             if (embedded.isMissingNode() || !embedded.fieldNames().hasNext()) {

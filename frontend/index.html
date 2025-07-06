@@ -254,19 +254,26 @@
         }
 
         .dashboard-preview {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-            padding: 30px;
             transform: perspective(1000px) rotateY(-15deg) rotateX(10deg);
             transition: all 0.3s ease;
             animation: float 6s ease-in-out infinite;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
         }
 
         .dashboard-preview:hover {
             transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+        }
+
+        .dashboard-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
         }
 
         .preview-header {
@@ -728,34 +735,7 @@
             
             <div class="hero-visual">
                 <div class="dashboard-preview">
-                    <div class="preview-header">
-                        <div class="preview-dot dot-red"></div>
-                        <div class="preview-dot dot-yellow"></div>
-                        <div class="preview-dot dot-green"></div>
-                    </div>
-                    
-                    <div class="preview-content">
-                        <div class="preview-card">
-                            <div class="preview-number">93%</div>
-                            <div class="preview-label">Satisfacción</div>
-                        </div>
-                        <div class="preview-card">
-                            <div class="preview-number">1.2K</div>
-                            <div class="preview-label">Usuarios Activos</div>
-                        </div>
-                        <div class="preview-card">
-                            <div class="preview-number">5</div>
-                            <div class="preview-label">Urgentes</div>
-                        </div>
-                        <div class="preview-card">
-                            <div class="preview-number">71</div>
-                            <div class="preview-label">Resueltos</div>
-                        </div>
-                    </div>
-                    
-                    <div class="preview-chart">
-                        <div class="chart-line"></div>
-                    </div>
+                    <img src="./images/ecardUser.png" alt="Dashboard Preview" class="dashboard-image">
                 </div>
             </div>
         </div>

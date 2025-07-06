@@ -81,42 +81,15 @@
             75% { transform: translate(-10px, 10px) rotate(270deg); }
         }
 
-        /* Floating Elements */
-        .floating-element {
-            position: absolute;
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(16, 185, 129, 0.1));
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-            z-index: 1;
-        }
-
-        .floating-element:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-element:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 70%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .floating-element:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Wrapper to scale the entire layout */
+        .login-wrapper {
+            transform: scale(0.9);
+            transform-origin: top center;
         }
 
         /* Main Container */
@@ -818,9 +791,6 @@
                 gap: 16px;
             }
 
-            .floating-element {
-                display: none;
-            }
         }
 
         @media (max-width: 480px) {
@@ -1070,9 +1040,6 @@
                 transition-duration: 0.01ms !important;
             }
 
-            .floating-element {
-                animation: none !important;
-            }
 
             body::before {
                 animation: none !important;
@@ -1150,12 +1117,9 @@
     </style>
 </head>
 <body>
-    <!-- Floating Elements -->
-    <div class="floating-element"></div>
-    <div class="floating-element"></div>
-    <div class="floating-element"></div>
 
-    <div class="login-container">
+    <div class="login-wrapper">
+        <div class="login-container">
         <!-- Branding Panel -->
         <div class="branding-panel">
             <!-- Back Arrow -->

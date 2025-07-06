@@ -325,9 +325,11 @@
 
         /* Enhanced Feature Card Styles */
         .features-grid {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
             justify-content: center;
-            align-items: center;
+            align-items: start;
             min-height: 600px;
         }
 
@@ -388,7 +390,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
 
         .feature-description {
             color: #64748b;
@@ -473,6 +474,200 @@
         .flow-item:nth-child(1)::before { animation-delay: 0s; background: linear-gradient(90deg, transparent, #34a853, transparent); }
         .flow-item:nth-child(2)::before { animation-delay: 0.2s; background: linear-gradient(90deg, transparent, #fbbc04, transparent); }
         .flow-item:nth-child(3)::before { animation-delay: 0.4s; background: linear-gradient(90deg, transparent, #ea4335, transparent); }
+
+        /* Urgency Dashboard Styles */
+        .urgency-dashboard {
+            background: rgba(26, 115, 232, 0.02);
+            border: 1px solid rgba(26, 115, 232, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .urgency-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .urgency-metric {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .urgency-metric:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .urgency-metric.high {
+            border-left: 4px solid #ea4335;
+        }
+
+        .urgency-metric.medium {
+            border-left: 4px solid #fbbc04;
+        }
+
+        .urgency-metric.low {
+            border-left: 4px solid #34a853;
+        }
+
+        .metric-icon {
+            font-size: 16px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .metric-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .metric-count {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .conversation-queue {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            transition: all 0.3s ease;
+            animation: slideInRight 0.5s ease;
+        }
+
+        .conversation-item:hover {
+            background: rgba(26, 115, 232, 0.05);
+            transform: translateX(5px);
+        }
+
+        .conversation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .conv-priority {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .conversation-item.urgent .conv-priority {
+            background: #ea4335;
+            box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.2);
+            animation: urgentPulse 1s ease-in-out infinite;
+        }
+
+        .conversation-item.medium .conv-priority {
+            background: #fbbc04;
+        }
+
+        .conversation-item.low .conv-priority {
+            background: #34a853;
+        }
+
+        .conv-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conv-user {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .conv-preview {
+            font-size: 11px;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conv-time {
+            font-size: 10px;
+            color: #94a3b8;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .priority-flow {
+            display: flex;
+            gap: 4px;
+            height: 4px;
+        }
+
+        .flow-line {
+            flex: 1;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            animation: priorityFlow 3s ease-in-out infinite;
+        }
+
+        .urgent-flow {
+            background: rgba(234, 67, 53, 0.2);
+        }
+
+        .urgent-flow::before {
+            background: linear-gradient(90deg, transparent, #ea4335, transparent);
+            animation-delay: 0s;
+        }
+
+        .medium-flow {
+            background: rgba(251, 188, 4, 0.2);
+        }
+
+        .medium-flow::before {
+            background: linear-gradient(90deg, transparent, #fbbc04, transparent);
+            animation-delay: 0.5s;
+        }
+
+        .low-flow {
+            background: rgba(52, 168, 83, 0.2);
+        }
+
+        .low-flow::before {
+            background: linear-gradient(90deg, transparent, #34a853, transparent);
+            animation-delay: 1s;
+        }
 
         /* CTA Section */
         .cta-section {
@@ -657,6 +852,33 @@
             to { transform: scaleY(1); }
         }
 
+        @keyframes urgentPulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.2);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 0 6px rgba(234, 67, 53, 0.1);
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes priorityFlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .hero-container {
@@ -672,6 +894,11 @@
             .footer-content {
                 grid-template-columns: 1fr 1fr;
                 gap: 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
         }
 
@@ -710,6 +937,19 @@
             .enhanced-feature-card {
                 padding: 30px;
                 margin: 0 20px;
+            }
+
+            .urgency-metrics {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .urgency-metric {
+                padding: 12px;
+            }
+
+            .conversation-queue {
+                max-height: 180px;
             }
         }
 
@@ -839,6 +1079,97 @@
                             <div class="flow-item"></div>
                             <div class="flow-item"></div>
                             <div class="flow-item"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="enhanced-feature-card">
+                    <div class="card-header">
+                        <div class="title-section">
+                            <h3>Priorización Inteligente</h3>
+                        </div>
+                    </div>
+                    
+                    <p class="feature-description">
+                        Clasifica automáticamente las conversaciones por nivel de urgencia. 
+                        Los ejecutivos pueden identificar instantáneamente qué casos requieren atención inmediata.
+                    </p>
+
+                    <div class="urgency-dashboard">
+                        <div class="dashboard-header">
+                            <div class="dashboard-title">
+                                <div class="live-indicator"></div>
+                                Cola de Conversaciones
+                            </div>
+                            <span style="font-size: 11px; color: #94a3b8;">Actualizando en tiempo real</span>
+                        </div>
+
+                        <div class="urgency-metrics">
+                            <div class="urgency-metric high">
+                                <div class="metric-icon">🔴</div>
+                                <div class="metric-info">
+                                    <span class="metric-count">3</span>
+                                    <span class="metric-label">Urgentes</span>
+                                </div>
+                            </div>
+                            <div class="urgency-metric medium">
+                                <div class="metric-icon">🟡</div>
+                                <div class="metric-info">
+                                    <span class="metric-count">8</span>
+                                    <span class="metric-label">Normales</span>
+                                </div>
+                            </div>
+                            <div class="urgency-metric low">
+                                <div class="metric-icon">🟢</div>
+                                <div class="metric-info">
+                                    <span class="metric-count">12</span>
+                                    <span class="metric-label">Bajas</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="conversation-queue">
+                            <div class="conversation-item urgent">
+                                <div class="conv-priority"></div>
+                                <div class="conv-content">
+                                    <div class="conv-user">Cliente #4521</div>
+                                    <div class="conv-preview">Problema con pago urgente...</div>
+                                </div>
+                                <div class="conv-time">2m</div>
+                            </div>
+                            
+                            <div class="conversation-item urgent">
+                                <div class="conv-priority"></div>
+                                <div class="conv-content">
+                                    <div class="conv-user">Cliente #4520</div>
+                                    <div class="conv-preview">Sistema caído, necesito...</div>
+                                </div>
+                                <div class="conv-time">5m</div>
+                            </div>
+                            
+                            <div class="conversation-item medium">
+                                <div class="conv-priority"></div>
+                                <div class="conv-content">
+                                    <div class="conv-user">Cliente #4519</div>
+                                    <div class="conv-preview">Consulta sobre facturación</div>
+                                </div>
+                                <div class="conv-time">8m</div>
+                            </div>
+                            
+                            <div class="conversation-item low">
+                                <div class="conv-priority"></div>
+                                <div class="conv-content">
+                                    <div class="conv-user">Cliente #4518</div>
+                                    <div class="conv-preview">Información general</div>
+                                </div>
+                                <div class="conv-time">12m</div>
+                            </div>
+                        </div>
+
+                        <div class="priority-flow">
+                            <div class="flow-line urgent-flow"></div>
+                            <div class="flow-line medium-flow"></div>
+                            <div class="flow-line low-flow"></div>
                         </div>
                     </div>
                 </div>
@@ -1141,6 +1472,59 @@
                     setInterval(updateMetrics, 3000);
                 }
             }
+
+            // Simulación de cola de conversaciones urgentes
+            function updateUrgencyQueue() {
+                const urgentMetric = document.querySelector('.urgency-metric.high .metric-count');
+                const mediumMetric = document.querySelector('.urgency-metric.medium .metric-count');
+                const lowMetric = document.querySelector('.urgency-metric.low .metric-count');
+                
+                if (urgentMetric && mediumMetric && lowMetric) {
+                    // Simular cambios en las métricas
+                    const urgent = Math.floor(Math.random() * 5) + 1;
+                    const medium = Math.floor(Math.random() * 10) + 5;
+                    const low = Math.floor(Math.random() * 15) + 8;
+                    
+                    urgentMetric.textContent = urgent;
+                    mediumMetric.textContent = medium;
+                    lowMetric.textContent = low;
+                }
+
+                // Simular nuevas conversaciones entrando
+                const queue = document.querySelector('.conversation-queue');
+                if (queue && Math.random() > 0.7) {
+                    const conversations = [
+                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Problema con el sistema...', urgency: 'urgent' },
+                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Consulta sobre el producto...', urgency: 'medium' },
+                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Información general...', urgency: 'low' },
+                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Error en la facturación...', urgency: 'urgent' },
+                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Pregunta sobre tarifas...', urgency: 'medium' }
+                    ];
+                    
+                    const randomConv = conversations[Math.floor(Math.random() * conversations.length)];
+                    const newItem = document.createElement('div');
+                    newItem.className = `conversation-item ${randomConv.urgency}`;
+                    newItem.innerHTML = `
+                        <div class="conv-priority"></div>
+                        <div class="conv-content">
+                            <div class="conv-user">${randomConv.user}</div>
+                            <div class="conv-preview">${randomConv.preview}</div>
+                        </div>
+                        <div class="conv-time">ahora</div>
+                    `;
+                    
+                    queue.insertBefore(newItem, queue.firstChild);
+                    
+                    // Remover el último elemento si hay más de 4
+                    const items = queue.children;
+                    if (items.length > 4) {
+                        queue.removeChild(items[items.length - 1]);
+                    }
+                }
+            }
+
+            // Actualizar cola cada 4 segundos
+            setInterval(updateUrgencyQueue, 4000);
         });
     </script>
 </body>

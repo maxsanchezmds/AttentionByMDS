@@ -220,32 +220,6 @@
             transform: translateY(-3px);
         }
 
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            animation: fadeInUp 1.6s ease;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1a73e8, #4285f4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
         /* Hero Visual */
         .hero-visual {
             position: relative;
@@ -269,7 +243,7 @@
 
         .dashboard-image {
             width: 100%;
-            max-width: 350px;
+            max-width: 320px;
             height: auto;
             border-radius: 20px;
             border: 1px solid rgba(26, 115, 232, 0.2);
@@ -476,6 +450,7 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
+
         .metric-info {
             display: flex;
             flex-direction: column;
@@ -494,83 +469,115 @@
             font-weight: 500;
         }
 
-        .conversation-queue {
+        /* Response Rate Progress Bar */
+        .response-progress {
             background: rgba(255, 255, 255, 0.8);
             border-radius: 12px;
-            padding: 5px;
+            padding: 20px;
             margin-bottom: 20px;
-            max-height: 200px;
-            overflow-y: auto;
         }
 
-        .conversation-item {
+        .progress-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
-            animation: slideInRight 0.5s ease;
+            margin-bottom: 15px;
         }
 
-        .conversation-item:hover {
-            background: rgba(26, 115, 232, 0.05);
-            transform: translateX(5px);
-        }
-
-        .conversation-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .conv-priority {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .conversation-item.urgent .conv-priority {
-            background: #ea4335;
-            box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.2);
-            animation: urgentPulse 1s ease-in-out infinite;
-        }
-
-        .conversation-item.medium .conv-priority {
-            background: #fbbc04;
-        }
-
-        .conversation-item.low .conv-priority {
-            background: #34a853;
-        }
-
-        .conv-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .conv-user {
-            font-size: 12px;
+        .progress-title {
+            font-size: 14px;
             font-weight: 600;
             color: #1a1a1a;
-            margin-bottom: 2px;
         }
 
-        .conv-preview {
-            font-size: 11px;
-            color: #64748b;
-            white-space: nowrap;
+        .progress-percentage {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-bar-container {
+            position: relative;
+            height: 12px;
+            background: rgba(26, 115, 232, 0.1);
+            border-radius: 6px;
             overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 15px;
         }
 
-        .conv-time {
-            font-size: 10px;
-            color: #94a3b8;
-            font-weight: 500;
-            flex-shrink: 0;
+        .progress-bar {
+            height: 100%;
+            background: #4285f4;
+            border-radius: 6px;
+            transition: width 1s ease-in-out;
+            position: relative;
+            overflow: hidden;
         }
 
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #4285f4;
+            animation: progressShine 2s ease-in-out infinite;
+        }
+
+
+        .priority-flow {
+            display: flex;
+            gap: 4px;
+            height: 4px;
+        }
+
+        .flow-line {
+            flex: 1;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            animation: priorityFlow 3s ease-in-out infinite;
+        }
+
+        .urgent-flow {
+            background: rgba(234, 67, 53, 0.2);
+        }
+
+        .urgent-flow::before {
+            background: linear-gradient(90deg, transparent, #ea4335, transparent);
+            animation-delay: 0s;
+        }
+
+        .medium-flow {
+            background: rgba(251, 188, 4, 0.2);
+        }
+
+        .medium-flow::before {
+            background: linear-gradient(90deg, transparent, #fbbc04, transparent);
+            animation-delay: 0.5s;
+        }
+
+        .low-flow {
+            background: rgba(52, 168, 83, 0.2);
+        }
+
+        .low-flow::before {
+            background: linear-gradient(90deg, transparent, #34a853, transparent);
+            animation-delay: 1s;
+        }
 
         /* CTA Section */
         .cta-section {
@@ -755,30 +762,14 @@
             to { transform: scaleY(1); }
         }
 
-        @keyframes urgentPulse {
-            0%, 100% { 
-                box-shadow: 0 0 0 3px rgba(234, 67, 53, 0.2);
-                transform: scale(1);
-            }
-            50% { 
-                box-shadow: 0 0 0 6px rgba(234, 67, 53, 0.1);
-                transform: scale(1.1);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
         @keyframes priorityFlow {
             0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes progressShine {
+            0% { left: -100%; }
+            50% { left: 0%; }
             100% { left: 100%; }
         }
 
@@ -819,11 +810,6 @@
                 align-items: center;
             }
 
-            .hero-stats {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
             .footer-content {
                 grid-template-columns: 1fr;
                 text-align: center;
@@ -851,8 +837,12 @@
                 padding: 12px;
             }
 
-            .conversation-queue {
-                max-height: 180px;
+            .response-progress {
+                padding: 15px;
+            }
+
+            .progress-percentage {
+                font-size: 20px;
             }
         }
 
@@ -912,20 +902,6 @@
                     <a href="#demo" class="btn-secondary">Ver Demo</a>
                 </div>
                 
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">99.9%</div>
-                        <div class="stat-label">Uptime</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">10M+</div>
-                        <div class="stat-label">Conversaciones</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">Empresas</div>
-                    </div>
-                </div>
             </div>
             
             <div class="hero-visual">
@@ -965,7 +941,7 @@
                         <div class="dashboard-header">
                             <div class="dashboard-title">
                                 <div class="live-indicator"></div>
-                                Sentimiento de tus Clientes
+                                Sentimiento de tus clientes
                             </div>
                             <span style="font-size: 11px; color: #94a3b8;">Última actualización: ahora</span>
                         </div>
@@ -989,7 +965,7 @@
                 <div class="enhanced-feature-card">
                     <div class="card-header">
                         <div class="title-section">
-                            <h3>Priorización Inteligente</h3>
+                            <h3>Clasificación Inteligente</h3>
                         </div>
                     </div>
                     
@@ -1002,7 +978,7 @@
                         <div class="dashboard-header">
                             <div class="dashboard-title">
                                 <div class="live-indicator"></div>
-                                Conversaciones Activas
+                                Cola de Conversaciones
                             </div>
                             <span style="font-size: 11px; color: #94a3b8;">Actualizando en tiempo real</span>
                         </div>
@@ -1017,53 +993,33 @@
                             <div class="urgency-metric medium">
                                 <div class="metric-info">
                                     <span class="metric-count">8</span>
-                                    <span class="metric-label">Moderado</span>
+                                    <span class="metric-label">Moderados</span>
                                 </div>
                             </div>
                             <div class="urgency-metric low">
                                 <div class="metric-info">
                                     <span class="metric-count">12</span>
-                                    <span class="metric-label">Leve</span>
+                                    <span class="metric-label">Leves</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="conversation-queue">
-                            <div class="conversation-item urgent">
-                                <div class="conv-priority"></div>
-                                <div class="conv-content">
-                                    <div class="conv-user">Cliente #4521</div>
-                                    <div class="conv-preview">Problema con pago urgente...</div>
-                                </div>
-                                <div class="conv-time">2m</div>
+                        <div class="response-progress">
+                            <div class="progress-header">
+                                <div class="progress-title">% Usuarios Activos Contestados</div>
+                                <div class="progress-percentage" id="responsePercentage">87%</div>
                             </div>
                             
-                            <div class="conversation-item urgent">
-                                <div class="conv-priority"></div>
-                                <div class="conv-content">
-                                    <div class="conv-user">Cliente #4520</div>
-                                    <div class="conv-preview">Sistema caído, necesito...</div>
-                                </div>
-                                <div class="conv-time">5m</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="progressBar" style="width: 87%;"></div>
                             </div>
                             
-                            <div class="conversation-item medium">
-                                <div class="conv-priority"></div>
-                                <div class="conv-content">
-                                    <div class="conv-user">Cliente #4519</div>
-                                    <div class="conv-preview">Consulta sobre facturación</div>
-                                </div>
-                                <div class="conv-time">8m</div>
-                            </div>
-                            
-                            <div class="conversation-item low">
-                                <div class="conv-priority"></div>
-                                <div class="conv-content">
-                                    <div class="conv-user">Cliente #4518</div>
-                                    <div class="conv-preview">Información general</div>
-                                </div>
-                                <div class="conv-time">12m</div>
-                            </div>
+                        </div>
+
+                        <div class="priority-flow">
+                            <div class="flow-line urgent-flow"></div>
+                            <div class="flow-line medium-flow"></div>
+                            <div class="flow-line low-flow"></div>
                         </div>
                     </div>
                 </div>
@@ -1367,14 +1323,28 @@
                 }
             }
 
-            // Simulación de cola de conversaciones urgentes
-            function updateUrgencyQueue() {
+            // Simulación de barra de progreso de respuestas
+            function updateResponseProgress() {
+                const progressBar = document.getElementById('progressBar');
+                const progressPercentage = document.getElementById('responsePercentage');
+                
+                if (progressBar && progressPercentage) {
+                    // Generar un porcentaje aleatorio entre 80% y 95%
+                    const newPercentage = Math.floor(Math.random() * 16) + 80;
+                    
+                    // Actualizar el texto del porcentaje
+                    progressPercentage.textContent = newPercentage + '%';
+                    
+                    // Actualizar la barra de progreso
+                    progressBar.style.width = newPercentage + '%';
+                }
+
+                // Actualizar las métricas de urgencia
                 const urgentMetric = document.querySelector('.urgency-metric.high .metric-count');
                 const mediumMetric = document.querySelector('.urgency-metric.medium .metric-count');
                 const lowMetric = document.querySelector('.urgency-metric.low .metric-count');
                 
                 if (urgentMetric && mediumMetric && lowMetric) {
-                    // Simular cambios en las métricas
                     const urgent = Math.floor(Math.random() * 5) + 1;
                     const medium = Math.floor(Math.random() * 10) + 5;
                     const low = Math.floor(Math.random() * 15) + 8;
@@ -1383,42 +1353,10 @@
                     mediumMetric.textContent = medium;
                     lowMetric.textContent = low;
                 }
-
-                // Simular nuevas conversaciones entrando
-                const queue = document.querySelector('.conversation-queue');
-                if (queue && Math.random() > 0.7) {
-                    const conversations = [
-                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Problema con el sistema...', urgency: 'urgent' },
-                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Consulta sobre el producto...', urgency: 'medium' },
-                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Información general...', urgency: 'low' },
-                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Error en la facturación...', urgency: 'urgent' },
-                        { user: 'Cliente #' + Math.floor(Math.random() * 9999), preview: 'Pregunta sobre tarifas...', urgency: 'medium' }
-                    ];
-                    
-                    const randomConv = conversations[Math.floor(Math.random() * conversations.length)];
-                    const newItem = document.createElement('div');
-                    newItem.className = `conversation-item ${randomConv.urgency}`;
-                    newItem.innerHTML = `
-                        <div class="conv-priority"></div>
-                        <div class="conv-content">
-                            <div class="conv-user">${randomConv.user}</div>
-                            <div class="conv-preview">${randomConv.preview}</div>
-                        </div>
-                        <div class="conv-time">ahora</div>
-                    `;
-                    
-                    queue.insertBefore(newItem, queue.firstChild);
-                    
-                    // Remover el último elemento si hay más de 4
-                    const items = queue.children;
-                    if (items.length > 4) {
-                        queue.removeChild(items[items.length - 1]);
-                    }
-                }
             }
 
-            // Actualizar cola cada 4 segundos
-            setInterval(updateUrgencyQueue, 4000);
+            // Actualizar barra de progreso cada 4 segundos
+            setInterval(updateResponseProgress, 4000);
         });
     </script>
 </body>

@@ -8,6 +8,7 @@ import com.attention.analysis.sentiment_service.repository.SentimentRepository;
 import com.attention.analysis.sentiment_service.repository.AvgSentimentRepository;
 import com.attention.analysis.sentiment_service.service.SentimentService;
 import org.junit.jupiter.api.Test;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -65,11 +66,11 @@ class SentimentControllerTest {
         AvgSentiment svg = new AvgSentiment(1L, 80.0, LocalDateTime.now(), 2L);
         when(svgSentimentRepository.findByIdConversacion(1L)).thenReturn(Optional.of(svg));
 
-        mockMvc.perform(get("/api/sentiment/analisis/1"))
+        mockMvc.perform(get("/api/sentiment/analisis/1").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo").value("promedio"))
                 .andExpect(jsonPath("$.data.promedioSentimiento").value(80.0))
-                .andExpect(jsonPath("$.data._links.self.href").exists());
+                .andExpect(jsonPath("$.data.links[0].href").exists());
     }
 
     @Test
@@ -79,7 +80,7 @@ class SentimentControllerTest {
         when(sentimentRepository.findLastMessagesByConversationId(1L, PageRequest.of(0, 10)))
                 .thenReturn(List.of(sentiment));
 
-        mockMvc.perform(get("/api/sentiment/analisis/1"))
+        mockMvc.perform(get("/api/sentiment/analisis/1").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo").value("individual"))
                 .andExpect(jsonPath("$.data._embedded.*[0].sentimiento").value(70))

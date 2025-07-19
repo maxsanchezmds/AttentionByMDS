@@ -83,7 +83,7 @@ class SentimentControllerTest {
         mockMvc.perform(get("/api/sentiment/analisis/1").accept(MediaTypes.HAL_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tipo").value("individual"))
-                .andExpect(jsonPath("$.data._embedded.*[0].sentimiento").value(70))
-                .andExpect(jsonPath("$.data._embedded.*[0]._links.conversacion.href").exists());
+                .andExpect(jsonPath("$.data.content[0].sentimiento").value(70))
+                .andExpect(jsonPath("$.data.content[0].links[0].href").exists());
     }
 }

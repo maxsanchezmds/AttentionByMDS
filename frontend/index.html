@@ -6,6 +6,7 @@
     <title>Attention MDS - Revoluciona tu Atención al Cliente</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link rel="stylesheet" href="./styles/index.css">
+    <script src="./JavaScript/SimulatorPrice.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -170,6 +171,214 @@
                             <div class="flow-line low-flow"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Pricing Section -->
+    <section class="pricing reveal" id="precios">
+        <div class="pricing-container">
+            <div class="section-header">
+                <div class="section-badge">💰 Precios Flexibles</div>
+                <h2 class="section-title">Paga solo por lo que necesitas</h2>
+                <p class="section-subtitle">
+                    Nuestro modelo de precios se adapta al tamaño y necesidades de tu empresa. 
+                    Sin sorpresas, con total transparencia en cada peso gastado.
+                </p>
+            </div>
+            
+            <div class="pricing-grid">
+                <!-- Reemplazar el pricing-explanation-card existente con este código -->
+                <div class="pricing-simulator-card">
+                    <div class="card-header">
+                        <div class="title-section">
+                            <h3>Simulador de Precios</h3>
+                        </div>
+                    </div>
+                    
+                    <p class="feature-description">
+                        Selecciona los servicios que necesitas y la cantidad de mensajes mensuales 
+                        para obtener una estimación personalizada de costos.
+                    </p>
+
+                    <div class="simulator-container">
+                        <div class="simulator-header">
+                            <div class="simulator-title">
+                                <div class="live-indicator"></div>
+                                Configurador de Servicios
+                            </div>
+                        </div>
+
+                        <div class="message-input-section">
+                            <label for="messageCount" class="input-label">Cantidad de mensajes mensuales</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="messageCount" class="message-input" value="5000" min="100" max="1000000">
+                                <span class="input-suffix">mensajes</span>
+                            </div>
+                        </div>
+
+                        <div class="services-section">
+                            <h4 class="services-title">Servicios Disponibles</h4>
+                            
+                            <div class="service-option">
+                                <div class="service-checkbox-wrapper">
+                                    <input type="checkbox" id="sentimentAnalysis" class="service-checkbox" checked>
+                                    <label for="sentimentAnalysis" class="service-label">
+                                        <div class="service-info">
+                                            <div class="service-name">Análisis de Sentimientos</div>
+                                            <div class="service-description">Detecta emociones en tiempo real</div>
+                                        </div>
+                                        <div class="service-price">$10 / 1k mensajes</div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="service-option">
+                                <div class="service-checkbox-wrapper">
+                                    <input type="checkbox" id="urgencyClassification" class="service-checkbox" checked>
+                                    <label for="urgencyClassification" class="service-label">
+                                        <div class="service-info">
+                                            <div class="service-name">Clasificación de Urgencia</div>
+                                            <div class="service-description">Prioriza conversaciones automáticamente</div>
+                                        </div>
+                                        <div class="service-price">$15 / 1k mensajes</div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="service-option">
+                                <div class="service-checkbox-wrapper">
+                                    <input type="checkbox" id="aiAssistant" class="service-checkbox">
+                                    <label for="aiAssistant" class="service-label">
+                                        <div class="service-info">
+                                            <div class="service-name">Asistente Autónomo con IA</div>
+                                            <div class="service-description">Respuestas automáticas inteligentes</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="simulator-summary">
+                            <div class="summary-row">
+                                <span class="summary-label">Servicios seleccionados:</span>
+                                <span class="summary-value" id="selectedServicesCount">2</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Costo estimado mensual:</span>
+                                <span class="summary-total" id="estimatedTotal">$400.000</span>
+                            </div>
+                        </div>
+
+                        <div class="pricing-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span>Precios transparentes sin costos ocultos</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span>Escalabilidad automática según demanda</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-check">✓</span>
+                                <span>Facturación detallada por servicio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="consumption-dashboard-card">
+                    <div class="card-header">
+                        <div class="title-section">
+                            <h3>Control Total de tu Consumo</h3>
+                        </div>
+                    </div>
+                    
+                    <p class="feature-description">
+                        Monitorea en tiempo real tu uso y gastos. Establece límites, recibe alertas 
+                        y proyecta tus costos mensuales con precisión absoluta.
+                    </p>
+
+                    <div class="consumption-dashboard">
+                        <div class="dashboard-header">
+                            <div class="dashboard-title">
+                                <div class="live-indicator"></div>
+                                Panel de Consumo
+                            </div>
+                            <span style="font-size: 11px; color: #94a3b8;">Actualización en tiempo real</span>
+                        </div>
+
+                        <div class="consumption-summary">
+                            <div class="consumption-item">
+                                <div class="consumption-label">Consumo del Mes</div>
+                                <div class="consumption-value" id="monthlyConsumption">$247.850</div>
+                            </div>
+                            <div class="consumption-item">
+                                <div class="consumption-label">Proyección Mensual</div>
+                                <div class="consumption-value projected" id="monthlyProjection">$389.200</div>
+                            </div>
+                        </div>
+
+                        <div class="usage-breakdown">
+                            <div class="breakdown-item">
+                                <div class="breakdown-info">
+                                    <span class="breakdown-service">Análisis de Conversaciones</span>
+                                    <span class="breakdown-amount">$156.420</span>
+                                </div>
+                                <div class="breakdown-bar">
+                                    <div class="breakdown-fill conversations" style="width: 63%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-item">
+                                <div class="breakdown-info">
+                                    <span class="breakdown-service">Envío y recepción de mensajes</span>
+                                    <span class="breakdown-amount">$67.230</span>
+                                </div>
+                                <div class="breakdown-bar">
+                                    <div class="breakdown-fill metrics" style="width: 27%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-item">
+                                <div class="breakdown-info">
+                                    <span class="breakdown-service">Métricas y Reportes</span>
+                                    <span class="breakdown-amount">$24.200</span>
+                                </div>
+                                <div class="breakdown-bar">
+                                    <div class="breakdown-fill premium" style="width: 10%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert-section">
+                            <div class="alert-item success">
+                                <div class="alert-icon">✓</div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Dentro del Presupuesto</div>
+                                    <div class="alert-subtitle">Proyección: 78% del límite mensual</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="quick-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" id="conversationsProcessed">12.847</span>
+                                <span class="stat-label">Conversaciones este mes</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="averageCost">$19.2</span>
+                                <span class="stat-label">Costo promedio por día</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-cta">
+                <div class="pricing-cta-content">
+                    <h3>¿El valor por cada servicio es fijo?</h3>
+                    <p>No, el valor por el servicio puede variar. La estimación mostrada anteriormente es solo referencial.</p>
                 </div>
             </div>
         </div>

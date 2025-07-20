@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Attention MDS</title>
+    <link rel="stylesheet" href="../styles/register.css">
+</head>
+<body>
+
+    <div class="register-wrapper">
+        <div class="register-container">
+        <!-- Branding Panel -->
+        <div class="branding-panel">
+            <!-- Back Arrow -->
+            <a href="#" class="back-arrow" onclick="window.history.back(); return false;" title="Volver"></a>
+            
+            <div class="branding-content">
+                <img src="../images/LoginLogo.svg" alt="Attention MDS" class="brand-logo">
+
+                <p class="brand-subtitle">
+                    Únete a la revolución del análisis conversacional. Crea tu cuenta y comienza a descubrir insights valiosos sobre tus clientes.
+                </p>
+                
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <div class="feature-icon analytics"></div>
+                        <span>Dashboard personalizado</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon ai"></div>
+                        <span>IA de última generación</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon security"></div>
+                        <span>Datos protegidos y seguros</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon speed"></div>
+                        <span>Configuración en minutos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Panel -->
+        <div class="register-panel">
+            <div class="register-header">
+                <h2 class="register-title">Crear Cuenta</h2>
+                <p class="register-subtitle">Completa la información para comenzar</p>
+            </div>
+
+            <!-- Account Type Selector -->
+            <div class="account-type-selector">
+                <button type="button" class="type-button active" data-type="empresa">
+                    <div class="type-icon company"></div>
+                    <span>Registrar Empresa</span>
+                </button>
+                <button type="button" class="type-button" data-type="ejecutivo">
+                    <div class="type-icon executive"></div>
+                    <span>Unirse como Ejecutivo</span>
+                </button>
+            </div>
+
+            <!-- Company Registration Form -->
+            <form class="register-form active" id="empresaForm" data-type="empresa">
+                <div class="form-section">
+                    <h3 class="section-title">Información de la Empresa</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="nombreLegalEmpresa">Nombre Legal de la Empresa</label>
+                            <input 
+                                type="text" 
+                                id="nombreLegalEmpresa" 
+                                class="form-input" 
+                                placeholder="Mi Empresa S.A."
+                                required
+                            >
+                            <div class="error-message" id="nombreLegalEmpresaError">Este campo es obligatorio</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="nitEmpresa">NIT/RUT de la Empresa</label>
+                            <input 
+                                type="text" 
+                                id="nitEmpresa" 
+                                class="form-input" 
+                                placeholder="123456789-1"
+                                required
+                            >
+                            <div class="error-message" id="nitEmpresaError">Ingresa un NIT válido</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="paisEmpresa">País</label>
+                            <select id="paisEmpresa" class="form-input" required>
+                                <option value="">Seleccionar país</option>
+                                <option value="Colombia">Colombia</option>
+                                <option value="Chile">Chile</option>
+                                <option value="México">México</option>
+                                <option value="Argentina">Argentina</option>
+                                <option value="Perú">Perú</option>
+                                <option value="Ecuador">Ecuador</option>
+                                <option value="Uruguay">Uruguay</option>
+                                <option value="Paraguay">Paraguay</option>
+                                <option value="Bolivia">Bolivia</option>
+                                <option value="Venezuela">Venezuela</option>
+                            </select>
+                            <div class="error-message" id="paisEmpresaError">Selecciona un país</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="telefonoEmpresa">Teléfono de la Empresa</label>
+                            <input 
+                                type="tel" 
+                                id="telefonoEmpresa" 
+                                class="form-input" 
+                                placeholder="+56 9 1234 5679"
+                                required
+                            >
+                            <div class="error-message" id="telefonoEmpresaError">Ingresa un teléfono válido</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="telefonoWhatsapp">WhatsApp Empresarial</label>
+                            <input 
+                                type="tel" 
+                                id="telefonoWhatsapp" 
+                                class="form-input" 
+                                placeholder="+56 9 1234 5679"
+                                required
+                            >
+                            <div class="error-message" id="telefonoWhatsappError">Ingresa un WhatsApp válido</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="correoEmpresa">Correo de la Empresa</label>
+                            <input 
+                                type="email" 
+                                id="correoEmpresa" 
+                                class="form-input" 
+                                placeholder="contacto@miempresa.com"
+                                required
+                            >
+                            <div class="error-message" id="correoEmpresaError">Ingresa un correo válido</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="direccionEmpresa">Dirección de la Empresa</label>
+                            <input 
+                                type="text" 
+                                id="direccionEmpresa" 
+                                class="form-input" 
+                                placeholder="Calle Principal 123"
+                                required
+                            >
+                            <div class="error-message" id="direccionEmpresaError">Este campo es obligatorio</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Administrador Principal</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="nombreCompletoAdmin">Nombre Completo del Administrador</label>
+                            <input 
+                                type="text" 
+                                id="nombreCompletoAdmin" 
+                                class="form-input" 
+                                placeholder="Juan Pérez"
+                                required
+                            >
+                            <div class="error-message" id="nombreCompletoAdminError">Este campo es obligatorio</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="correoElectronicoAdmin">Correo del Administrador</label>
+                            <input 
+                                type="email" 
+                                id="correoElectronicoAdmin" 
+                                class="form-input" 
+                                placeholder="admin@miempresa.com"
+                                required
+                            >
+                            <div class="error-message" id="correoElectronicoAdminError">Ingresa un correo válido</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="telefonoAdmin">Teléfono del Administrador</label>
+                            <input 
+                                type="tel" 
+                                id="telefonoAdmin" 
+                                class="form-input" 
+                                placeholder="+56 9 8765 4321"
+                                required
+                            >
+                            <div class="error-message" id="telefonoAdminError">Ingresa un teléfono válido</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="documentoIdentidadAdmin">Documento de Identidad</label>
+                            <input 
+                                type="text" 
+                                id="documentoIdentidadAdmin" 
+                                class="form-input" 
+                                placeholder="1234567891"
+                                required
+                            >
+                            <div class="error-message" id="documentoIdentidadAdminError">Este campo es obligatorio</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="passwordAdmin">Contraseña</label>
+                            <div class="password-container">
+                                <input 
+                                    type="password" 
+                                    id="passwordAdmin" 
+                                    class="form-input" 
+                                    placeholder="••••••••"
+                                    required
+                                >
+                                <button type="button" class="password-toggle show" id="passwordToggleAdmin"></button>
+                            </div>
+                            <div class="error-message" id="passwordAdminError">La contraseña debe tener al menos 8 caracteres</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="register-button" id="empresaButton">
+                    Registrar Empresa
+                </button>
+            </form>
+
+            <!-- Executive Registration Form -->
+            <form class="register-form" id="ejecutivoForm" data-type="ejecutivo">
+                <div class="form-section">
+                    <h3 class="section-title">Información Personal</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="nombreCompletoEjec">Nombre Completo</label>
+                            <input 
+                                type="text" 
+                                id="nombreCompletoEjec" 
+                                class="form-input" 
+                                placeholder="María González"
+                                required
+                            >
+                            <div class="error-message" id="nombreCompletoEjecError">Este campo es obligatorio</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="correoElectronicoEjec">Correo Electrónico</label>
+                            <input 
+                                type="email" 
+                                id="correoElectronicoEjec" 
+                                class="form-input" 
+                                placeholder="ejecutivo@miempresa.com"
+                                required
+                            >
+                            <div class="error-message" id="correoElectronicoEjecError">Ingresa un correo válido</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="telefonoEjec">Teléfono</label>
+                            <input 
+                                type="tel" 
+                                id="telefonoEjec" 
+                                class="form-input" 
+                                placeholder="+57 300 1112233"
+                                required
+                            >
+                            <div class="error-message" id="telefonoEjecError">Ingresa un teléfono válido</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="documentoIdentidadEjec">Documento de Identidad</label>
+                            <input 
+                                type="text" 
+                                id="documentoIdentidadEjec" 
+                                class="form-input" 
+                                placeholder="0987654321"
+                                required
+                            >
+                            <div class="error-message" id="documentoIdentidadEjecError">Este campo es obligatorio</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="passwordEjec">Contraseña</label>
+                            <div class="password-container">
+                                <input 
+                                    type="password" 
+                                    id="passwordEjec" 
+                                    class="form-input" 
+                                    placeholder="••••••••"
+                                    required
+                                >
+                                <button type="button" class="password-toggle show" id="passwordToggleEjec"></button>
+                            </div>
+                            <div class="error-message" id="passwordEjecError">La contraseña debe tener al menos 8 caracteres</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="identificadorEmpresa">ID de la Empresa</label>
+                            <input 
+                                type="text" 
+                                id="identificadorEmpresa" 
+                                class="form-input" 
+                                placeholder="c37d3958-8242-4271-b813-14191e004cb1"
+                                required
+                            >
+                            <div class="error-message" id="identificadorEmpresaError">Ingresa el ID de la empresa</div>
+                            <div class="help-text">Solicita este ID al administrador de tu empresa</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="register-button" id="ejecutivoButton">
+                    Registrar Ejecutivo
+                </button>
+            </form>
+
+            <div class="login-link">
+                ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión aquí</a>
+            </div>
+        </div>
+    </div>
+    <script src="../JavaScript/register.js"></script>
+</body>
+</html>

@@ -303,23 +303,22 @@ document.addEventListener('DOMContentLoaded', function() {
             setLoadingState(empresaButton, true);
             
             try {
-                // Simulate API call
                 console.log('Datos de empresa a enviar:', empresaData);
-                
-                // Here you would make the actual API call
-                // const response = await fetch('/api/register/empresa', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(empresaData)
-                // });
-                
-                // Simulate loading time
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Show success message
-                alert('¡Empresa registrada exitosamente! Se ha enviado un correo de confirmación.');
+
+                const response = await fetch('/api/auth/registro/empresa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(empresaData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.mensaje || 'Error en la solicitud');
+                }
+
+                await response.json();
                 
                 // Reset form or redirect
                 // empresaForm.reset();
@@ -354,27 +353,23 @@ document.addEventListener('DOMContentLoaded', function() {
             setLoadingState(ejecutivoButton, true);
             
             try {
-                // Simulate API call
                 console.log('Datos de ejecutivo a enviar:', ejecutivoData);
-                
-                // Here you would make the actual API call
-                // const response = await fetch('/api/register/ejecutivo', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(ejecutivoData)
-                // });
-                
-                // Simulate loading time
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Show success message
-                alert('¡Ejecutivo registrado exitosamente! Se ha enviado un correo de confirmación.');
-                
-                // Reset form or redirect
-                // ejecutivoForm.reset();
-                // window.location.href = 'login.html';
+
+                const response = await fetch('/api/auth/registro/ejecutivo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(ejecutivoData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.mensaje || 'Error en la solicitud');
+                }
+
+                await response.json();
+
                 
             } catch (error) {
                 console.error('Error al registrar ejecutivo:', error);
